@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Clarus" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../Build/Debug/libclarus" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="../Build/Debug/Clarus/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="../Build/Release/libclarus" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="../Build/Release/Clarus/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-march=native" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="./" />
+			<Add directory="../" />
+		</Compiler>
+		<Unit filename="clarus/clarus.hpp" />
+		<Unit filename="clarus/data.hpp" />
+		<Unit filename="clarus/data/table.hpp" />
+		<Unit filename="clarus/fit.hpp" />
+		<Unit filename="clarus/fit/line.cpp" />
+		<Unit filename="clarus/fit/line.hpp" />
+		<Unit filename="clarus/fit/ransac.hpp" />
+		<Unit filename="clarus/fit/samples.hpp" />
+		<Unit filename="clarus/io.hpp" />
+		<Unit filename="clarus/io/gnuplot.cpp" />
+		<Unit filename="clarus/io/gnuplot.hpp" />
+		<Unit filename="clarus/wnn.hpp" />
+		<Unit filename="clarus/wnn/minchinton.hpp" />
+		<Unit filename="clarus/wnn/receptor.cpp" />
+		<Unit filename="clarus/wnn/receptor.hpp" />
+		<Unit filename="clarus/wnn/synapses.cpp" />
+		<Unit filename="clarus/wnn/synapses.hpp" />
+		<Unit filename="clarus/wnn/weightless.hpp" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

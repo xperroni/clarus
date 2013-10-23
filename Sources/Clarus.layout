@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="clarus/clarus.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="111" topLine="0" />
+	</File>
+	<File name="clarus/data.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="90" topLine="0" />
+	</File>
+	<File name="clarus/data/table.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="18" />
+	</File>
+	<File name="clarus/fit.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="153" topLine="0" />
+	</File>
+	<File name="clarus/fit/line.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="427" topLine="0" />
+	</File>
+	<File name="clarus/fit/line.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="262" topLine="0" />
+	</File>
+	<File name="clarus/fit/ransac.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="141" topLine="0" />
+	</File>
+	<File name="clarus/fit/samples.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="551" topLine="18" />
+	</File>
+	<File name="clarus/io.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="64" topLine="0" />
+	</File>
+	<File name="clarus/io/gnuplot.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1057" topLine="19" />
+	</File>
+	<File name="clarus/io/gnuplot.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="334" topLine="1" />
+	</File>
+	<File name="clarus/wnn.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="199" topLine="0" />
+	</File>
+	<File name="clarus/wnn/minchinton.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="81" topLine="0" />
+	</File>
+	<File name="clarus/wnn/receptor.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="34" topLine="0" />
+	</File>
+	<File name="clarus/wnn/receptor.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="77" topLine="0" />
+	</File>
+	<File name="clarus/wnn/synapses.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="10" topLine="0" />
+	</File>
+	<File name="clarus/wnn/synapses.hpp" open="0" top="0" tabpos="0">
+		<Cursor position="74" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>
