@@ -1,5 +1,5 @@
-#ifndef TABLE_HPP
-#define TABLE_HPP
+#ifndef CLARUS_CORE_TABLE_HPP
+#define CLARUS_CORE_TABLE_HPP
 
 #include <boost/shared_ptr.hpp>
 
@@ -54,4 +54,4 @@ template<typename T> T &Table::set(const std::string &name, T *value) {
     return *(record->value);
 }
 
-#endif // MEMORY_H
+#endif

@@ -40,14 +40,21 @@
 			<Add directory="../" />
 		</Compiler>
 		<Unit filename="clarus/clarus.hpp" />
-		<Unit filename="clarus/data.hpp" />
-		<Unit filename="clarus/data/table.hpp" />
+		<Unit filename="clarus/core.hpp" />
+		<Unit filename="clarus/core/locker.cpp" />
+		<Unit filename="clarus/core/locker.hpp" />
+		<Unit filename="clarus/core/looper.cpp" />
+		<Unit filename="clarus/core/looper.hpp" />
+		<Unit filename="clarus/core/table.hpp" />
+		<Unit filename="clarus/core/tasks.cpp" />
+		<Unit filename="clarus/core/tasks.hpp" />
 		<Unit filename="clarus/fit.hpp" />
 		<Unit filename="clarus/fit/line.cpp" />
 		<Unit filename="clarus/fit/line.hpp" />
 		<Unit filename="clarus/fit/ransac.hpp" />
-		<Unit filename="clarus/fit/samples.hpp" />
 		<Unit filename="clarus/io.hpp" />
+		<Unit filename="clarus/io/camera.cpp" />
+		<Unit filename="clarus/io/camera.hpp" />
 		<Unit filename="clarus/io/gnuplot.cpp" />
 		<Unit filename="clarus/io/gnuplot.hpp" />
 		<Unit filename="clarus/wnn.hpp" />

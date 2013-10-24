@@ -3,6 +3,5 @@
 
 #include <clarus/fit/line.hpp>
 #include <clarus/fit/ransac.hpp>
-#include <clarus/fit/samples.hpp>
 
 #endif

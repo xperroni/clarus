@@ -1,7 +1,8 @@
 #ifndef LINE_HPP
 #define LINE_HPP
 
-#include <clarus/fit/samples.hpp>
+#include <string>
+#include <vector>
 
 class LineModel {
 public:
@@ -9,7 +10,7 @@ public:
 
     typedef std::pair<Domain, Domain> Datum;
 
-    typedef Samples<Datum> Data;
+    typedef std::vector<Datum> Data;
 
     typedef Domain Distance;
 
@@ -17,11 +18,25 @@ public:
 
     Domain b;
 
+    Domain min_xd;
+
+    double fitness;
+
+    LineModel();
+
+    LineModel(const Domain &min_xd);
+
     void fit(Data &data);
 
-    Distance distance(const Datum &datum);
+    Distance distance(const Datum &datum) const;
 
-    Domain eval(const Domain &x);
+    Distance distance(const LineModel &that) const;
+
+    Domain eval(const Domain &x) const;
+
+    std::string cartesian();
+
+    std::string parametric();
 };
 
 #endif

@@ -4,7 +4,7 @@
 #include <fstream>
 
 Gnuplot::Gnuplot():
-    pipe(popen("gnuplot", "w"), pclose)
+    pipe(popen("gnuplot -persist", "w"), pclose)
 {
     // Nothing to do.
 }
@@ -26,7 +26,8 @@ void set_defaults(Gnuplot &gnuplot) {
     gnuplot("set mouse");  /* use mouse */
     gnuplot("set xlabel \"x\"");  /* label of x-axis */
     gnuplot("set ylabel \"y\"");  /* label of y-axis */
-    gnuplot("set xrange [-10:10] reverse");  /* range of x-axis */
+    gnuplot("set trange [-10:10]");  /* range of function parameter t */
+    gnuplot("set xrange [-10:10]");  /* range of x-axis */
     gnuplot("set yrange [-10:10]");  /* range of y-axis */
     gnuplot("set size ratio -1");  /* aspect ratio */
     gnuplot("unset key");  /* hide graph legends */
