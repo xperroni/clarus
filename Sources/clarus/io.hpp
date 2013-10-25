@@ -2,6 +2,7 @@
 #define CLARUS_UI_HPP
 
 #include <clarus/io/camera.hpp>
+#include <clarus/io/console.hpp>
 #include <clarus/io/gnuplot.hpp>
 
 #endif

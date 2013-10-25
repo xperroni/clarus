@@ -4,7 +4,7 @@
 #include <fstream>
 
 Gnuplot::Gnuplot():
-    pipe(popen("gnuplot -persist", "w"), pclose)
+    pipe(popen("gnuplot", "w"), pclose)
 {
     // Nothing to do.
 }

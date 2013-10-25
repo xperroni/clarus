@@ -3,9 +3,7 @@
 
 #include <boost/thread.hpp>
 
-template<typename T> class locked_ptr: public boost::shared_ptr<T>
-{
-public:
+template<typename T> struct locked_ptr: public boost::shared_ptr<T> {
     template<typename F, typename G> locked_ptr(T *pointer, F lock, G unlock):
         boost::shared_ptr<T>(pointer, unlock)
     {
@@ -13,8 +11,7 @@ public:
     };
 };
 
-class Locker
-{
+class Locker {
     boost::shared_mutex locker;
 
     boost::condition_variable notification;

@@ -23,11 +23,12 @@ template<typename T> struct Record: public Entry {
     };
 };
 
-class Table
-{
+class Table {
     std::map<std::string, boost::shared_ptr<Entry> > entries;
 
 public:
+    bool has(const std::string &name);
+
     template<typename T> T &get(const std::string &name);
 
     template<typename T> T &set(const std::string &name, const T &value);
