@@ -3,6 +3,7 @@
 
 #include <clarus/wnn/synapses.hpp>
 
+#include <boost/function.hpp>
 #include <opencv2/core/core.hpp>
 
 #include <vector>
@@ -12,6 +13,8 @@ class Receptor {
 
 public:
     Receptor(std::vector<Synapses> stem);
+
+    Receptor(int n, boost::function<cv::Mat()> synapses);
 
     template<class Samples> Samples sample(std::vector<cv::Mat> &inputs, cv::Rect &roi);
 };

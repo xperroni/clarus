@@ -45,6 +45,7 @@
 		<Unit filename="clarus/core/locker.hpp" />
 		<Unit filename="clarus/core/looper.cpp" />
 		<Unit filename="clarus/core/looper.hpp" />
+		<Unit filename="clarus/core/table.cpp" />
 		<Unit filename="clarus/core/table.hpp" />
 		<Unit filename="clarus/fit.hpp" />
 		<Unit filename="clarus/fit/line.cpp" />
@@ -53,15 +54,21 @@
 		<Unit filename="clarus/io.hpp" />
 		<Unit filename="clarus/io/camera.cpp" />
 		<Unit filename="clarus/io/camera.hpp" />
+		<Unit filename="clarus/io/console.cpp" />
+		<Unit filename="clarus/io/console.hpp" />
 		<Unit filename="clarus/io/gnuplot.cpp" />
 		<Unit filename="clarus/io/gnuplot.hpp" />
+		<Unit filename="clarus/io/viewer.cpp" />
+		<Unit filename="clarus/io/viewer.hpp" />
 		<Unit filename="clarus/wnn.hpp" />
+		<Unit filename="clarus/wnn/layer.cpp" />
+		<Unit filename="clarus/wnn/layer.hpp" />
 		<Unit filename="clarus/wnn/minchinton.hpp" />
+		<Unit filename="clarus/wnn/neuron.hpp" />
 		<Unit filename="clarus/wnn/receptor.cpp" />
 		<Unit filename="clarus/wnn/receptor.hpp" />
 		<Unit filename="clarus/wnn/synapses.cpp" />
 		<Unit filename="clarus/wnn/synapses.hpp" />
-		<Unit filename="clarus/wnn/weightless.hpp" />
 		<Extensions>
 			<envvars />
 			<code_completion />

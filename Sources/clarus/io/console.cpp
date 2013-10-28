@@ -19,7 +19,7 @@ Console::Console(const std::string &title) {
     }
 
     std::string command = std::string("xterm -title '") + title + "' -e 'cat " + path + "' &";
-    system(command.c_str());
+    status = system(command.c_str());
 
     pipe = fopen(path.c_str(), "w");
 }
