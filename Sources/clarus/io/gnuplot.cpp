@@ -1,23 +1,11 @@
 #include "gnuplot.hpp"
 
-#include <cstdarg>
 #include <fstream>
 
 Gnuplot::Gnuplot():
-    pipe(popen("gnuplot", "w"), pclose)
+    OutputCommand("cat %s | gnuplot")
 {
     // Nothing to do.
-}
-
-void Gnuplot::operator () (const std::string &command, ...) {
-    va_list args;
-    va_start(args, command);
-    vfprintf(pipe.get(), (command + '\n').c_str(), args);
-    va_end(args);
-}
-
-void Gnuplot::flush() {
-    fflush(pipe.get());
 }
 
 void set_defaults(Gnuplot &gnuplot) {

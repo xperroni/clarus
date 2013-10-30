@@ -1,20 +1,14 @@
 #ifndef GNUPLOT_HPP
 #define GNUPLOT_HPP
 
-#include <boost/shared_ptr.hpp>
+#include <clarus/io/command.hpp>
 
 #include <cstdio>
 #include <string>
 
-class Gnuplot {
-    boost::shared_ptr<FILE> pipe;
-
+class Gnuplot: public OutputCommand {
 public:
     Gnuplot();
-
-    void operator () (const std::string &command, ...);
-
-    void flush();
 };
 
 void plot2d(Gnuplot &gnuplot, const std::string &path, int c0, int c1);

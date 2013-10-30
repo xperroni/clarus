@@ -54,6 +54,8 @@
 		<Unit filename="clarus/io.hpp" />
 		<Unit filename="clarus/io/camera.cpp" />
 		<Unit filename="clarus/io/camera.hpp" />
+		<Unit filename="clarus/io/command.cpp" />
+		<Unit filename="clarus/io/command.hpp" />
 		<Unit filename="clarus/io/console.cpp" />
 		<Unit filename="clarus/io/console.hpp" />
 		<Unit filename="clarus/io/gnuplot.cpp" />

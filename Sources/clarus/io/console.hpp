@@ -1,18 +1,14 @@
 #ifndef CLARUS_IO_CONSOLE_HPP
 #define CLARUS_IO_CONSOLE_HPP
 
+#include <clarus/io/command.hpp>
+
 #include <cstdio>
 #include <string>
 
-class Console {
-    FILE *pipe;
-
+class Console: public OutputCommand {
 public:
     Console(const std::string &title);
-
-    virtual ~Console();
-
-    void operator () (const std::string &format, ...);
 };
 
 #endif
