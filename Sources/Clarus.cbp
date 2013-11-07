@@ -62,6 +62,12 @@
 		<Unit filename="clarus/io/gnuplot.hpp" />
 		<Unit filename="clarus/io/viewer.cpp" />
 		<Unit filename="clarus/io/viewer.hpp" />
+		<Unit filename="clarus/vision/bayer.cpp" />
+		<Unit filename="clarus/vision/bayer.hpp" />
+		<Unit filename="clarus/vision/depths.cpp" />
+		<Unit filename="clarus/vision/depths.hpp" />
+		<Unit filename="clarus/vision/fourier.cpp" />
+		<Unit filename="clarus/vision/fourier.hpp" />
 		<Unit filename="clarus/wnn.hpp" />
 		<Unit filename="clarus/wnn/layer.cpp" />
 		<Unit filename="clarus/wnn/layer.hpp" />
