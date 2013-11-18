@@ -7,6 +7,15 @@ cv::Size fourier::fit(const cv::Size &size) {
     );
 }
 
+cv::Mat fourier::convolve(const cv::Mat &data, const cv::Mat &kernel) {
+    cv::Size size = data.size();
+    cv::Size optimal = fit(size);
+    cv::Mat data_f = transform(data, optimal);
+    cv::Mat kernel_f = transform(kernel, optimal);
+    cv::Mat fourier = data_f.mul(kernel_f);
+    return inverse(fourier, size);
+}
+
 cv::Mat fourier::transform(const cv::Mat &data, const cv::Size &optimal) {
     cv::Size size = optimal;
     if (size.width == 0 || size.height == 0) {
