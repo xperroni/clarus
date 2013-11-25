@@ -4,6 +4,7 @@
 #include <clarus/core.hpp>
 #include <clarus/fit.hpp>
 #include <clarus/io.hpp>
-#include <clarus/wnn.hpp>
+#include <clarus/vgram.hpp>
+#include <clarus/vision.hpp>
 
 #endif

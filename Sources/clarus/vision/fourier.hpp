@@ -12,6 +12,10 @@ namespace fourier {
 
     cv::Mat inverse(const cv::Mat &fourier, const cv::Size &optimal = cv::Size(0, 0));
 
+    cv::Mat magnitude(const cv::Mat &fourier);
+
+    cv::Mat phase(const cv::Mat &fourier);
+
     cv::Mat bgr(const cv::Mat &fourier);
 }
 

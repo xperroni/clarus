@@ -41,6 +41,8 @@
 		</Compiler>
 		<Unit filename="clarus/clarus.hpp" />
 		<Unit filename="clarus/core.hpp" />
+		<Unit filename="clarus/core/index.hpp" />
+		<Unit filename="clarus/core/list.hpp" />
 		<Unit filename="clarus/core/locker.cpp" />
 		<Unit filename="clarus/core/locker.hpp" />
 		<Unit filename="clarus/core/looper.cpp" />
@@ -48,6 +50,7 @@
 		<Unit filename="clarus/core/table.cpp" />
 		<Unit filename="clarus/core/table.hpp" />
 		<Unit filename="clarus/fit.hpp" />
+		<Unit filename="clarus/fit/ballot.hpp" />
 		<Unit filename="clarus/fit/line.cpp" />
 		<Unit filename="clarus/fit/line.hpp" />
 		<Unit filename="clarus/fit/ransac.hpp" />
@@ -62,21 +65,19 @@
 		<Unit filename="clarus/io/gnuplot.hpp" />
 		<Unit filename="clarus/io/viewer.cpp" />
 		<Unit filename="clarus/io/viewer.hpp" />
+		<Unit filename="clarus/vgram.hpp" />
+		<Unit filename="clarus/vgram/bitstring.hpp" />
+		<Unit filename="clarus/vgram/network.hpp" />
+		<Unit filename="clarus/vgram/neuron.hpp" />
+		<Unit filename="clarus/vision.hpp" />
 		<Unit filename="clarus/vision/bayer.cpp" />
 		<Unit filename="clarus/vision/bayer.hpp" />
 		<Unit filename="clarus/vision/depths.cpp" />
 		<Unit filename="clarus/vision/depths.hpp" />
+		<Unit filename="clarus/vision/filters.cpp" />
+		<Unit filename="clarus/vision/filters.hpp" />
 		<Unit filename="clarus/vision/fourier.cpp" />
 		<Unit filename="clarus/vision/fourier.hpp" />
-		<Unit filename="clarus/wnn.hpp" />
-		<Unit filename="clarus/wnn/layer.cpp" />
-		<Unit filename="clarus/wnn/layer.hpp" />
-		<Unit filename="clarus/wnn/minchinton.hpp" />
-		<Unit filename="clarus/wnn/neuron.hpp" />
-		<Unit filename="clarus/wnn/receptor.cpp" />
-		<Unit filename="clarus/wnn/receptor.hpp" />
-		<Unit filename="clarus/wnn/synapses.cpp" />
-		<Unit filename="clarus/wnn/synapses.hpp" />
 		<Extensions>
 			<envvars />
 			<code_completion />

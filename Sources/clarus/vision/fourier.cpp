@@ -47,6 +47,27 @@ cv::Mat fourier::inverse(const cv::Mat &fourier, const cv::Size &optimal) {
     return real(cv::Rect(0, 0, size.width, size.height));
 }
 
+cv::Mat fourier::magnitude(const cv::Mat &fourier) {
+    std::vector<cv::Mat> plane;
+    cv::split(fourier, plane);
+
+    cv::Mat mag;
+    cv::magnitude(plane[0], plane[1], mag);
+    mag += cv::Scalar::all(1);
+    cv::log(mag, mag);
+    return mag;
+}
+
+cv::Mat fourier::phase(const cv::Mat &fourier) {
+    std::vector<cv::Mat> plane;
+    cv::split(fourier, plane);
+
+    cv::Mat pha;
+    cv::phase(plane[1], plane[0], pha);
+    cv::normalize(pha, pha, 0, 127, CV_MINMAX);
+    return pha;
+}
+
 cv::Mat fourier::bgr(const cv::Mat &fourier) {
     const cv::Size &size = fourier.size();
     cv::Mat hls(size, CV_8UC3);
