@@ -74,10 +74,14 @@
 		<Unit filename="clarus/vision/bayer.hpp" />
 		<Unit filename="clarus/vision/depths.cpp" />
 		<Unit filename="clarus/vision/depths.hpp" />
+		<Unit filename="clarus/vision/dither.cpp" />
+		<Unit filename="clarus/vision/dither.hpp" />
 		<Unit filename="clarus/vision/filters.cpp" />
 		<Unit filename="clarus/vision/filters.hpp" />
 		<Unit filename="clarus/vision/fourier.cpp" />
 		<Unit filename="clarus/vision/fourier.hpp" />
+		<Unit filename="clarus/vision/sampler.cpp" />
+		<Unit filename="clarus/vision/sampler.hpp" />
 		<Extensions>
 			<envvars />
 			<code_completion />

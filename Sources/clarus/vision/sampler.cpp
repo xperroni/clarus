@@ -15,27 +15,16 @@ You should have received a copy of the GNU General Public License
 along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <clarus/vision/filters.hpp>
+#include "sampler.hpp"
 
-cv::Mat sobel::filter(const cv::Mat &l) {
-    cv::Mat g, x, y, e;
-
-    // Gradient X
-    cv::Sobel(l, g, CV_16S, 1, 0, 3, 1, 0, cv::BORDER_DEFAULT);
-    cv::convertScaleAbs(g, x);
-
-    // Gradient Y
-    cv::Sobel(l, g, CV_16S, 0, 1, 3, 1, 0, cv::BORDER_DEFAULT);
-    cv::convertScaleAbs(g, y);
-
-    // Total Gradient (approximate)
-    cv::addWeighted(x, 0.5, y, 0.5, 0, g);
-    cv::convertScaleAbs(g, e);
-
-    return e;
+clarus::sampler::gaussian::gaussian(double _sigma, const cv::Size &_size):
+    sigma(_sigma),
+    size(_size)
+{
+    // Nothing to do.
 }
 
-static int gauss(double sigma, int c, int n) {
+int clarus::sampler::gaussian::sample(int c, int n) const {
     static cv::RNG rng;
 
     int i = rng.gaussian(sigma) + c;
@@ -49,22 +38,26 @@ static int gauss(double sigma, int c, int n) {
     return i;
 }
 
-gaussian::sampler::sampler() {
+clarus::Point clarus::sampler::gaussian::operator () () const {
+    int in = size.height;
+    int ic = in / 2;
+
+    int jn = size.width;
+    int jc = jn / 2;
+
+    return Point(
+        sample(ic, in),
+        sample(jc, jn)
+    );
+}
+
+clarus::sampler::sampler() {
     // Nothing to do.
 }
 
-gaussian::sampler::sampler(size_t n, double sigma, const cv::Size &size) {
-    int in = size.height;
-    int jn = size.width;
-    int ic = in / 2;
-    int jc = jn / 2;
-
+clarus::sampler::sampler(size_t n, Distribution distribution) {
     while (points.size() < n) {
-        point p(
-            gauss(sigma, ic, in),
-            gauss(sigma, jc, jn)
-        );
-
+        Point p = distribution();
         points.insert(p);
     }
 }

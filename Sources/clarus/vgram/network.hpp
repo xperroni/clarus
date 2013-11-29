@@ -1,3 +1,20 @@
+/*
+This file is part of Clarus.
+
+Clarus is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Clarus is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef CLARUS_VGRAM_NETWORK_HPP
 #define CLARUS_VGRAM_NETWORK_HPP
 
@@ -13,6 +30,8 @@ template <class W> class vgram::network {
     typedef typename W::Y Y;
 
     typedef typename W::B B;
+
+    typedef typename W::F F;
 
     typedef typename W::G G;
 
@@ -31,8 +50,6 @@ template <class W> class vgram::network {
     typedef typename W::beta beta;
 
     typedef typename W::gamma gamma;
-
-    typedef typename W::delta delta;
 
     typedef typename W::omega omega;
 
@@ -56,15 +73,18 @@ template<class W> vgram::network<W>::network(const P &_p):
 
 template<class W> typename W::O vgram::network<W>::get(const X &x) const {
     alpha a(p, x);
-    delta d(p, N_z, x);
     omega w(p);
-    for (typename delta::const_iterator di = d.begin(), dn = d.end(); di != dn; ++di) {
-        const neuron<B, G> &nl = di->second;
-        const L &l = di->first;
-        gamma c(p, l);
-        for (typename gamma::iterator ci = c.begin(), cn = c.end(); ci != cn; ++ci) {
-            const J &j = *ci;
-            typename neuron<B, G>::response r = nl.get(a(l, j));
+
+    const List<J> &m = a.indices();
+    for (typename List<J>::const_iterator i = m.begin(), n = m.end(); i != n; ++i) {
+        const J &j = *i;
+        F f = a(j);
+
+        gamma c(p, N_z, f, j);
+        for (typename gamma::iterator c_l = c.begin(), c_n = c.end(); c_l != c_n; ++c_l) {
+            const L &l = c_l->first;
+            neuron<B, G> &nl = c_l->second;
+            typename neuron<B, G>::response r = nl.get(a(l, f, j));
             w.add(l, j, r.g, r.d);
         }
     }
@@ -75,14 +95,18 @@ template<class W> typename W::O vgram::network<W>::get(const X &x) const {
 template<class W> void vgram::network<W>::set(const X &x, const Y &y) {
     alpha a(p, x);
     beta b(p, y);
-    delta d(p, N_z, x);
-    for (typename delta::iterator di = d.begin(), dn = d.end(); di != dn; ++di) {
-        const L &l = di->first;
-        neuron<B, G> &nl = di->second;
-        gamma c(p, l);
-        for (typename gamma::iterator ci = c.begin(), cn = c.end(); ci != cn; ++ci) {
-            const J &j = *ci;
-            nl.set(a(l, j), b(j));
+
+    const List<J> &m = a.indices();
+    for (typename List<J>::const_iterator i = m.begin(), n = m.end(); i != n; ++i) {
+        const J &j = *i;
+        F f = a(j);
+        G g = b(j);
+
+        gamma c(p, N_z, f, g, j);
+        for (typename gamma::iterator c_l = c.begin(), c_n = c.end(); c_l != c_n; ++c_l) {
+            const L &l = c_l->first;
+            neuron<B, G> &nl = c_l->second;
+            nl.set(a(l, f, j), g);
         }
     }
 }
