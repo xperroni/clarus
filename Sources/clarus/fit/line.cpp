@@ -35,6 +35,14 @@ LineModel::LineModel(const Domain &_min_xd):
 {
 }
 
+double LineModel::angle() {
+    if (isnan(a)) {
+        return M_PI_2;
+    }
+
+    return atan(a);
+}
+
 void LineModel::fit(Data &data) {
     Datum &p0 = data[0];
     Datum::first_type x0 = p0.first;

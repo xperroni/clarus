@@ -43,6 +43,8 @@ public:
 
     LineModel(const Domain &min_xd);
 
+    double angle();
+
     void fit(Data &data);
 
     Distance distance(const Datum &datum) const;
