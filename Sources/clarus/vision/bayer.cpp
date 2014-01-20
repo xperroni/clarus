@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,10 +14,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <clarus/vision/bayer.hpp>
+
+#include <clarus/vision/images.hpp>
 
 inline int channel(int i, int j) {
     return (
@@ -39,7 +43,7 @@ cv::Mat bayer::filter(const cv::Mat &image) {
 }
 
 cv::Mat bayer::filter(const std::string &path) {
-    return filter(cv::imread(path));
+    return filter(images::load(path));
 }
 
 cv::Mat bayer::bgr(const cv::Mat &mosaic) {

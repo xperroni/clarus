@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,14 +14,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CLARUS_FIT_HPP
-#define CLARUS_FIT_HPP
+#include "math.hpp"
 
-#include <clarus/fit/ballot.hpp>
-#include <clarus/fit/line.hpp>
-#include <clarus/fit/ransac.hpp>
+#include <cmath>
 
-#endif
+double clarus::log(double x, double base) {
+    return ::log(x) / ::log(base);
+}
+
+double clarus::log2(double x) {
+    static double BASE2 = 1.0 / ::log(2.0);
+
+    return ::log(x) * BASE2;
+}
+

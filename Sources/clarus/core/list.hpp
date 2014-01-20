@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,16 +14,129 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef CLARUS_CORE_LIST_HPP
 #define CLARUS_CORE_LIST_HPP
 
+#include <boost/shared_ptr.hpp>
+#include <opencv2/opencv.hpp>
+
+#include <cstddef>
 #include <vector>
 
-template<class T> class List: public std::vector<T> {
-    // Nothing to do.
+template<class T> class List {
+    typedef std::vector<T> Buffer;
+
+    boost::shared_ptr<Buffer> buffer;
+
+public:
+    List();
+
+    List(int length);
+
+    List(const Buffer &that);
+
+    List clone() const;
+
+    T &operator [] (int index);
+
+    const T &operator [] (int index) const;
+
+    Buffer &operator * ();
+
+    const Buffer &operator * () const;
+
+    Buffer *operator -> ();
+
+    const Buffer *operator -> () const;
+
+    T &at(int index);
+
+    const T &at(int index) const;
+
+    T &append(const T &value = T());
+
+    T &last();
+
+    const T &last() const;
+
+    int size() const;
 };
+
+template<class T> List<T>::List():
+    buffer(new Buffer())
+{
+    // Nothing to do.
+}
+
+template<class T> List<T>::List(int length):
+    buffer(new Buffer(length))
+{
+    // Nothing to do.
+}
+
+template<class T> List<T>::List(const Buffer &that):
+    buffer(new Buffer(that))
+{
+    // Nothing to do.
+}
+
+template<class T> List<T> List<T>::clone() const {
+    return List(buffer);
+}
+
+template<class T> T &List<T>::operator [] (int index) {
+    return (*buffer)[index];
+}
+
+template<class T> const T &List<T>::operator [] (int index) const {
+    return (*buffer)[index];
+}
+
+template<class T> typename List<T>::Buffer& List<T>::operator * () {
+    return *buffer;
+}
+
+template<class T> const typename List<T>::Buffer& List<T>::operator * () const {
+    return *buffer;
+}
+
+template<class T> typename List<T>::Buffer *List<T>::operator -> () {
+    return buffer.get();
+}
+
+template<class T> const typename List<T>::Buffer *List<T>::operator -> () const {
+    return buffer.get();
+}
+
+template<class T> T &List<T>::at(int index) {
+    return buffer->at(index);
+}
+
+template<class T> const T &List<T>::at(int index) const {
+    return buffer->at(index);
+}
+
+template<class T> T &List<T>::append(const T &value) {
+    buffer->push_back(value);
+    return buffer->back();
+}
+
+template<class T> T &List<T>::last() {
+    return buffer->back();
+}
+
+template<class T> const T &List<T>::last() const {
+    return buffer->back();
+}
+
+template<class T> int List<T>::size() const {
+    return buffer->size();
+}
+
+#include <clarus/core/list_iterator.hpp>
+#include <clarus/core/list_iterator_const.hpp>
 
 #endif

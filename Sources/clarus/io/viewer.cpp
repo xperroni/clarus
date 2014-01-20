@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,25 +14,42 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "viewer.hpp"
+#include <clarus/io/viewer.hpp>
+#include <clarus/vision/colors.hpp>
 
-Viewer::Viewer(const std::string &_name):
-    name(_name)
-{
-    // Nothing to do.
+void viewer::show(const std::string &title, const cv::Mat &data, int x, int y, bool normalize) {
+    cv::Mat pixels = (normalize ? colors::discrete(data) : data);
+
+    cv::imshow(title, pixels);
+
+    if (x > -1 && y > -1) {
+        cvMoveWindow(title.c_str(), x, y);
+    }
+
+    cv::waitKey(1);
 }
 
-Viewer::~Viewer() {
+void viewer::plot(const std::string &title, const cv::Mat &data, int x, int y) {
+    show(title, data, x, y, true);
+}
+
+viewer::window::window(const std::string &_name):
+    name(_name)
+{
+    cv::namedWindow(name);
+}
+
+viewer::window::~window() {
     close();
 }
 
-void Viewer::view(const cv::Mat &mat) {
-    cv::imshow(name, mat);
+void viewer::window::operator () (const cv::Mat &mat, int x, int y, bool normalize) {
+    show(name, mat, x, y, normalize);
 }
 
-void Viewer::close() {
+void viewer::window::close() {
     cv::destroyWindow(name);
 }

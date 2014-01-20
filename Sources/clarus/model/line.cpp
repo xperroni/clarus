@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,10 +14,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <clarus/fit/line.hpp>
+#include <clarus/model/line.hpp>
 
 #include <cmath>
 #include <limits>

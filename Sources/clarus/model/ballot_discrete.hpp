@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,15 +14,19 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CLARUS_FIT_BALLOT_HPP
-#define CLARUS_FIT_BALLOT_HPP
+#ifndef CLARUS_MODEL_BALLOT_DISCRETE_HPP
+#define CLARUS_MODEL_BALLOT_DISCRETE_HPP
 
 #include <map>
 
-template<class X> class Ballot {
+namespace ballot {
+    template<class X> class discrete;
+}
+
+template<class X> class ballot::discrete {
     typedef std::map<X, int> Votes;
 
     Votes votes;
@@ -31,7 +37,7 @@ public:
     X winner();
 };
 
-template<class X> void Ballot<X>::vote(const X &x) {
+template<class X> void ballot::discrete<X>::vote(const X &x) {
     if (votes.count(x) == 0) {
         votes[x] = 1;
     }
@@ -40,7 +46,7 @@ template<class X> void Ballot<X>::vote(const X &x) {
     }
 }
 
-template<class X> X Ballot<X>::winner() {
+template<class X> X ballot::discrete<X>::winner() {
     X x = votes.begin()->first;
     int count = 0;
 
@@ -53,6 +59,6 @@ template<class X> X Ballot<X>::winner() {
     }
 
     return x;
-};
+}
 
-#endif // CLARUS_FIT_BALLOT_HPP
+#endif

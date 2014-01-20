@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,52 +14,95 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <clarus/vision/dither.hpp>
 
-const double floyd_1_2 = 7.0 / 16.0;
-const double floyd_2_0 = 3.0 / 16.0;
-const double floyd_2_1 = 5.0 / 16.0;
-const double floyd_2_2 = 1.0 / 16.0;
+#include <clarus/vision/filters.hpp>
+
+cv::Mat dither::binary(const cv::Mat &image, double threshold) {
+    CHANNEL_WISE(binary, image, threshold);
+
+    cv::Mat dithered;
+    cv::threshold(image, dithered, threshold, 255, cv::THRESH_BINARY);
+    return dithered;
+}
+
+/*
+Calculates a table of 256 assignments with as many distinct values as the given bit depth.
+
+Values are taken at equal intervals from the ranges [0, 128) and [128, 256),
+such that both 0 and 255 are always included in the range.
+*/
+static cv::Mat lookup(uchar bits) {
+    static std::map<uchar, cv::Mat> tables;
+    if (tables.count(bits) > 0) {
+        return tables[bits];
+    }
+
+    int factor = 256 / pow(2, bits);
+    cv::Mat table(1, 256, CV_8U);
+    uchar *p = table.data;
+
+    for(int i = 0; i < 128; ++i) {
+        p[i] = factor * (i / factor);
+    }
+
+    for(int i = 128; i < 256; ++i) {
+        p[i] = factor * (1 + (i / factor)) - 1;
+    }
+
+    tables[bits] = table;
+    return table;
+}
+
+cv::Mat dither::threshold(const cv::Mat &image, uchar bits) {
+    CHANNEL_WISE(threshold, image, bits);
+
+    cv::Mat table = lookup(bits);
+    cv::Mat dithered;
+    cv::LUT(image, table, dithered);
+    return dithered;
+}
 
 inline void update(uchar &pixel, double u) {
-    double a = (double) pixel;
-    if (u > 0) {
-        pixel = (uchar) std::min(255.0, a + u);
-    }
-    else {
-        pixel = (uchar) std::max(0.0, a + u);
-    }
+    pixel = (uchar) (u > 0 ? std::min(255.0, u + pixel) : std::max(0.0, u + pixel));
 }
 
-inline double step(uchar value, uchar scale, uchar threshold) {
-    uchar pixel = (value / scale) * scale;
-    return (pixel < threshold ? pixel : 255);
+inline uchar& neighbor(uchar *cell, int cols, int i, int j) {
+    return *(cell + i * cols + j);
 }
 
-cv::Mat dither::transform(const cv::Mat &image, uchar bits) {
+cv::Mat dither::diffusion(const cv::Mat &image, uchar bits) {
+    static const double quant_1_2 = 7.0 / 16.0;
+    static const double quant_2_0 = 3.0 / 16.0;
+    static const double quant_2_1 = 5.0 / 16.0;
+    static const double quant_2_2 = 1.0 / 16.0;
+
+    CHANNEL_WISE(diffusion, image, bits);
+
     int rows = image.rows;
     int cols = image.cols;
 
     cv::Mat dithered;
-    cv::copyMakeBorder(image, dithered, 0, rows + 1, 0, cols + 1, cv::BORDER_CONSTANT, cv::Scalar::all(0));
+    cv::copyMakeBorder(image, dithered, 0, rows + 1, 0, cols + 1, cv::BORDER_CONSTANT, cv::Scalar(0));
 
-    uchar depth = pow(2, bits);
-    uchar scale = 255 / depth;
-    uchar threshold = 254 - scale; // I do mean 254, it's not a typo
+    cv::Mat table = lookup(bits);
 
     for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            double pix = dithered.at<uchar>(i, j);
-            double sub = step(pix, scale, threshold);
-            dithered.at<uchar>(i, j) = (uchar) sub;
-            double e = pix - sub;
-            update(dithered.at<uchar>(i + 0, j + 1), e * floyd_1_2);
-            update(dithered.at<uchar>(i + 1, j - 1), e * floyd_2_0);
-            update(dithered.at<uchar>(i + 1, j + 0), e * floyd_2_1);
-            update(dithered.at<uchar>(i + 1, j + 1), e * floyd_2_2);
+        uchar *cell = dithered.ptr<uchar>(i);
+        for (int j = 0; j < cols; j++, cell++) {
+            double pix = *cell;
+            double dit = table.at<uchar>(pix);
+            double err = pix - dit;
+
+            *cell = (uchar) dit;
+
+            update(neighbor(cell, cols, i + 0, j + 1), err * quant_1_2);
+            update(neighbor(cell, cols, i + 1, j - 1), err * quant_2_0);
+            update(neighbor(cell, cols, i + 1, j + 0), err * quant_2_1);
+            update(neighbor(cell, cols, i + 1, j + 1), err * quant_2_2);
         }
     }
 

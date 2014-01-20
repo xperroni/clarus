@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,7 +14,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <clarus/vision/fourier.hpp>
@@ -29,7 +31,7 @@ cv::Mat fourier::convolve(const cv::Mat &data, const cv::Mat &kernel) {
     cv::Size optimal = fit(size);
     cv::Mat data_f = transform(data, optimal);
     cv::Mat kernel_f = transform(kernel, optimal);
-    cv::Mat fourier = data_f.mul(kernel_f);
+    cv::Mat fourier = data_f.mul(-kernel_f);
     return inverse(fourier, size);
 }
 
@@ -49,7 +51,8 @@ cv::Mat fourier::transform(const cv::Mat &data, const cv::Size &optimal) {
     cv::merge(plane, 2, fourier);
     cv::dft(fourier, fourier, cv::DFT_COMPLEX_OUTPUT);
 
-    return fourier;
+    // Cuts off negative frequencies, which are redundant for real inputs.
+    return fourier(cv::Rect(0, 0, fourier.cols, 1 + fourier.rows / 2));
 }
 
 cv::Mat fourier::inverse(const cv::Mat &fourier, const cv::Size &optimal) {

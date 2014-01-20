@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,17 +14,21 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef CLARUS_VISION_HPP
 #define CLARUS_VISION_HPP
 
 #include <clarus/vision/bayer.hpp>
+#include <clarus/vision/colors.hpp>
 #include <clarus/vision/depths.hpp>
 #include <clarus/vision/dither.hpp>
 #include <clarus/vision/filters.hpp>
 #include <clarus/vision/fourier.hpp>
-#include <clarus/vision/sampler.hpp>
+#include <clarus/vision/gaussian.hpp>
+#include <clarus/vision/images.hpp>
+#include <clarus/vision/kernel.hpp>
+#include <clarus/vision/logpolar.hpp>
 
 #endif

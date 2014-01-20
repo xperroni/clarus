@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,13 +14,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef CLARUS_VGRAM_HPP
 #define CLARUS_VGRAM_HPP
 
 #include <clarus/vgram/bitstring.hpp>
+#include <clarus/vgram/layer.hpp>
 #include <clarus/vgram/neuron.hpp>
 #include <clarus/vgram/network.hpp>
 

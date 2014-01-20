@@ -1,4 +1,6 @@
 /*
+Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
+
 This file is part of Clarus.
 
 Clarus is free software: you can redistribute it and/or modify
@@ -12,15 +14,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Clarus.  If not, see <http://www.gnu.org/licenses/>.
+along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CLARUS_UI_HPP
-#define CLARUS_UI_HPP
+#ifndef CLARUS_IO_HPP
+#define CLARUS_IO_HPP
 
 #include <clarus/io/camera.hpp>
 #include <clarus/io/command.hpp>
 #include <clarus/io/console.hpp>
 #include <clarus/io/gnuplot.hpp>
+#include <clarus/io/viewer.hpp>
 
 #endif
