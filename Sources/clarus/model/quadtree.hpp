@@ -1,139 +1,134 @@
 #ifndef CLARUS_MODEL_QUADTREE_HPP
 #define CLARUS_MODEL_QUADTREE_HPP
 
-#include <clarus/model/point.hpp>
-
 #include <boost/shared_ptr.hpp>
 #include <opencv2/opencv.hpp>
 
 #include <stdexcept>
 #include <string>
 
-namespace quadtree {
-    template<class T> class points;
-}
-
-template<class T> class quadtree::points {
+template<class T> class Quadtree {
     struct node {
-        typedef std::vector<node*> Children;
+        typedef boost::shared_ptr<node> nodeP;
 
-        typedef std::pair<point, T> Value;
+        typedef List<nodeP> Children;
+
+        typedef std::pair<cv::Point, T> Value;
 
         typedef List<Value> Values;
 
-        point::range bounds;
+        cv::Rect bounds;
 
         Children children;
 
         Values values;
 
-        node(const point::range &range);
+        node(const cv::Rect &bounds);
 
-        virtual ~node();
+        bool add(const cv::Point &p, const T& value);
 
-        bool add(const point &p, const T& value);
-
-        void query(const point::range &range, Values &result) const;
+        void query(const cv::Rect &range, Values &result) const;
     };
 
     node root;
 
 public:
-    typedef typename node::Values values;
+    typedef typename node::Values Values;
 
-    points(size_t in, size_t jn);
+    Quadtree(const cv::Size &size);
 
-    void add(size_t i, size_t j, const T &value);
+    void add(int x, int y, const T &value);
 
-    void add(const point &p, const T &value);
+    void add(const cv::Point &point, const T &value);
 
-    void add(const cv::Point &p, const T &value);
+    Values query(const cv::Rect &range) const;
 
-    List<std::pair<point, T> > query(const point::range &sought) const;
+    const cv::Size &size() const;
 };
 
-template<class T> quadtree::points<T>::node::node(const point::range &range):
-    bounds(range)
+template<class T> Quadtree<T>::node::node(const cv::Rect &_bounds):
+    bounds(_bounds)
 {
     // Nothing to do.
 }
 
-template<class T> quadtree::points<T>::node::~node() {
-    for (typename Children::iterator i = children.begin(), n = children.end(); i != n; ++i) {
-        delete *i;
-    }
-}
-
-template<class T> bool quadtree::points<T>::node::add(const point &p, const T &value) {
-    if (!bounds.contains(p)) {
+template<class T> bool Quadtree<T>::node::add(const cv::Point &point, const T &value) {
+    if (!point.inside(bounds)) {
         return false;
     }
 
     if (values.size() < 4) {
-        values.append(std::make_pair(p, value));
+        values.append(std::make_pair(point, value));
         return true;
     }
 
     if (children.size() == 0) {
-        const point &p0 = bounds.p0;
-        const point &pn = bounds.pn;
-        point pk((pn[0] + p0[0]) / 2, (pn[1] + p0[1]) / 2);
-        children.push_back(new node(point::range(p0[0], p0[1], pk[0], pk[1])));
-        children.push_back(new node(point::range(p0[0], pk[1], pk[0], pn[1])));
-        children.push_back(new node(point::range(pk[0], p0[1], pn[0], pk[1])));
-        children.push_back(new node(point::range(pk[0], pk[1], pn[0], pn[1])));
+        int xn = bounds.width;
+        int yn = bounds.height;
+        int xm = xn / 2;
+        int ym = yn / 2;
+
+        int x0 = bounds.x;
+        int y0 = bounds.y;
+        int xk = x0 + xm;
+        int yk = y0 + ym;
+
+        children.append().reset(new node(cv::Rect(x0, y0, xm, ym)));
+        children.append().reset(new node(cv::Rect(xk, y0, xn, ym)));
+        children.append().reset(new node(cv::Rect(x0, yk, xm, yn)));
+        children.append().reset(new node(cv::Rect(xk, yk, xn, yn)));
     }
 
-    for (typename Children::iterator k = children.begin(), n = children.end(); k != n; ++k) {
-        node *child = *k;
-        if (child->add(p, value)) {
+    for (ListIterator<node> i(children); i.more();) {
+        nodeP &child = i.next();
+        if (child->add(point, value)) {
             return true;
         }
     }
 
-    throw std::runtime_error("Could not add value to tree at point " + (std::string) p);
+    throw std::runtime_error("Could not add value to tree at point " + (std::string) point);
 }
 
-template<class T> void quadtree::points<T>::node::query(const point::range &range, Values &result) const {
-    if (!bounds.intersects(range)) {
+template<class T> void Quadtree<T>::node::query(const cv::Rect &range, Values &result) const {
+    if ((bounds & range).area() == 0) {
         return;
     }
 
     for (ListIteratorConst<Value> i(values); i.more(); i.next()) {
-        const point &p = i->first;
-        if (range.contains(p)) {
+        const cv::Point &point = i->first;
+        if (point.inside(range)) {
             result.append(*i);
         }
     }
 
-    for (typename Children::const_iterator i = children.begin(), n = children.end(); i != n; ++i) {
-        node *child = *i;
+    for (ListIterator<node> i(children); i.more();) {
+        nodeP &child = i.next();
         child->query(range, result);
     }
 }
 
-template<class T> quadtree::points<T>::points(size_t in, size_t jn):
-    root(point::range(0, 0, in, jn))
+template<class T> Quadtree<T>::Quadtree(const cv::Size &size):
+    root(cv::Rect(0, 0, size.width, size.height))
 {
     // Nothing to do.
 }
 
-template<class T> void quadtree::points<T>::add(size_t i, size_t j, const T&value) {
-    root.add(point(i, j), value);
+template<class T> void Quadtree<T>::add(int x, int y, const T&value) {
+    add(cv::Point(x, y), value);
 }
 
-template<class T> void quadtree::points<T>::add(const point &p, const T&value) {
-    root.add(p, value);
+template<class T> void Quadtree<T>::add(const cv::Point &point, const T &value) {
+    root.add(point, value);
 }
 
-template<class T> void quadtree::points<T>::add(const cv::Point &p, const T &value) {
-    add(p.y, p.x, value);
-}
-
-template<class T> List<std::pair<point, T> > quadtree::points<T>::query(const point::range &sought) const {
-    values result;
-    root.query(sought, result);
+template<class T> typename Quadtree<T>::Values Quadtree<T>::query(const cv::Rect &range) const {
+    Values result;
+    root.query(range, result);
     return result;
+}
+
+template<class T> const cv::Size &Quadtree<T>::size() const {
+    return root.bounds.size();
 }
 
 #endif
