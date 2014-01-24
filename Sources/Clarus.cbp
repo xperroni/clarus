@@ -73,6 +73,8 @@
 		<Unit filename="clarus/model/ballot_weighted.hpp" />
 		<Unit filename="clarus/model/line.cpp" />
 		<Unit filename="clarus/model/line.hpp" />
+		<Unit filename="clarus/model/munkres.cpp" />
+		<Unit filename="clarus/model/munkres.hpp" />
 		<Unit filename="clarus/model/point.cpp" />
 		<Unit filename="clarus/model/point.hpp" />
 		<Unit filename="clarus/model/quadtree.hpp" />
