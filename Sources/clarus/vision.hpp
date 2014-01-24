@@ -30,5 +30,6 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <clarus/vision/images.hpp>
 #include <clarus/vision/kernel.hpp>
 #include <clarus/vision/logpolar.hpp>
+#include <clarus/vision/minchinton.hpp>
 
 #endif
