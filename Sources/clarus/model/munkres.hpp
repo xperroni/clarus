@@ -7,7 +7,7 @@
 
 #include <utility>
 
-typedef std::pair<int, int> Assignment;
+typedef std::pair<size_t, size_t> Assignment;
 
 /*
 Implements the Hungarian algorithm [1]. Code adapted from [2].

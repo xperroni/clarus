@@ -350,8 +350,8 @@ Munkres::Munkres(cv::Mat &_matrix, cv::Mat &_mask_matrix):
 }
 
 List<Assignment> munkres(const cv::Mat &data, bool rowfirst) {
-    int rows = data.rows;
-    int cols = data.cols;
+    size_t rows = data.rows;
+    size_t cols = data.cols;
 
     if (rows < cols) {
         throw std::runtime_error("Munkres method requires cols <= rows");
@@ -374,9 +374,9 @@ List<Assignment> munkres(const cv::Mat &data, bool rowfirst) {
     Munkres solver(costs, solution);
 
     List<Assignment> assignments;
-    for (int i = 0; i < rows; i++) {
+    for (size_t i = 0; i < rows; i++) {
         int *cell = solution.ptr<int>(i);
-        for (int j = 0; j < cols; j++, cell++) {
+        for (size_t j = 0; j < cols; j++, cell++) {
             if (*cell != STAR) {
                 continue;
             }
