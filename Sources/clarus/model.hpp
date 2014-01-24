@@ -22,6 +22,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <clarus/model/ballot.hpp>
 #include <clarus/model/line.hpp>
+#include <clarus/model/munkres.hpp>
 #include <clarus/model/point.hpp>
 #include <clarus/model/quadtree.hpp>
 #include <clarus/model/ransac.hpp>
