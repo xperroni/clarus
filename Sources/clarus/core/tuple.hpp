@@ -52,6 +52,10 @@ public:
     operator std::string() const;
 
     double distance(const Tuple &other) const;
+
+    inline size_t size() const {
+        return n;
+    }
 };
 
 template<class T, size_t n> Tuple<T, n>::Tuple() {
