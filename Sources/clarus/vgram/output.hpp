@@ -17,7 +17,7 @@ template<class T> class vgram::output {
 public:
     output();
 
-    output(boost::shared_ptr<T> &t, size_t d);
+    output(boost::shared_ptr<T> t, size_t d);
 
     output(const T &t, size_t d);
 
@@ -35,7 +35,7 @@ template<class T> vgram::output<T>::output():
     // Nothing to do.
 }
 
-template<class T> vgram::output<T>::output(boost::shared_ptr<T> &_t, size_t _d):
+template<class T> vgram::output<T>::output(boost::shared_ptr<T> _t, size_t _d):
     t(_t),
     d(_d)
 {
