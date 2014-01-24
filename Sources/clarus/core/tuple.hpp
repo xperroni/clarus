@@ -39,6 +39,14 @@ public:
 
     Tuple(T value, va_list &args);
 
+    Tuple operator + (const Tuple& that) const;
+
+    Tuple operator - (const Tuple& that) const;
+
+    Tuple operator * (const Tuple& that) const;
+
+    Tuple operator / (const Tuple& that) const;
+
     T &operator [] (size_t index);
 
     const T &operator [] (size_t index) const;
@@ -78,6 +86,42 @@ template<class T, size_t n> void Tuple<T, n>::init(T value, va_list &args) {
     for (size_t i = 1; i < n; i++) {
         values[i] = va_arg(args, T);
     }
+}
+
+template<class T, size_t n> Tuple<T, n> Tuple<T, n>::operator + (const Tuple& that) const {
+    Tuple result;
+    for (size_t i = 0; i < n; i++) {
+        result.values[i] = this->values[i] + that.values[i];
+    }
+
+    return result;
+}
+
+template<class T, size_t n> Tuple<T, n> Tuple<T, n>::operator - (const Tuple& that) const {
+    Tuple result;
+    for (size_t i = 0; i < n; i++) {
+        result.values[i] = this->values[i] - that.values[i];
+    }
+
+    return result;
+}
+
+template<class T, size_t n> Tuple<T, n> Tuple<T, n>::operator * (const Tuple& that) const {
+    Tuple result;
+    for (size_t i = 0; i < n; i++) {
+        result.values[i] = this->values[i] * that.values[i];
+    }
+
+    return result;
+}
+
+template<class T, size_t n> Tuple<T, n> Tuple<T, n>::operator / (const Tuple& that) const {
+    Tuple result;
+    for (size_t i = 0; i < n; i++) {
+        result.values[i] = this->values[i] / that.values[i];
+    }
+
+    return result;
 }
 
 template<class T, size_t n> T &Tuple<T, n>::operator [] (size_t index) {
