@@ -58,12 +58,21 @@ public:
 
     T &append(const T &value = T());
 
+    bool contains(const T &value);
+
+    T &first();
+
+    const T &first() const;
+
     T &last();
 
     const T &last() const;
 
     int size() const;
 };
+
+#include <clarus/core/list_iterator.hpp>
+#include <clarus/core/list_iterator_const.hpp>
 
 template<class T> List<T>::List():
     buffer(new Buffer())
@@ -124,6 +133,24 @@ template<class T> T &List<T>::append(const T &value) {
     return buffer->back();
 }
 
+template<class T> bool List<T>::contains(const T &value) {
+    for (ListIteratorConst<T> i(*this); i.more();) {
+        if (i.next() == value) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+template<class T> T &List<T>::first() {
+    return buffer->front();
+}
+
+template<class T> const T &List<T>::first() const {
+    return buffer->front();
+}
+
 template<class T> T &List<T>::last() {
     return buffer->back();
 }
@@ -135,8 +162,5 @@ template<class T> const T &List<T>::last() const {
 template<class T> int List<T>::size() const {
     return buffer->size();
 }
-
-#include <clarus/core/list_iterator.hpp>
-#include <clarus/core/list_iterator_const.hpp>
 
 #endif
