@@ -72,9 +72,9 @@ template<class W> vgram::network<W>::network(const P &_p):
 
 template<class W> typename vgram::network<W>::O vgram::network<W>::get(const X &x) const {
     alpha a(p, x);
-    omega w(p);
+    omega w(a);
 
-    for (gamma c(p, a); c.more(); c.next()) {
+    for (gamma c(a); c.more(); c.next()) {
         const J &j = c.input();
         const L &l = c.neuron();
         output<G> o = N_z.get(l, a(j, l));
@@ -88,9 +88,9 @@ template<class W> typename vgram::network<W>::O vgram::network<W>::get(const X &
 
 template<class W> void vgram::network<W>::set(const X &x, const Y &y) {
     alpha a(p, x);
-    beta b(p, y);
+    beta b(a, y);
 
-    for (gamma c(p, a); c.more(); c.next()) {
+    for (gamma c(a, b); c.more(); c.next()) {
         const J &j = c.input();
         const L &l = c.neuron();
         N_z.set(l, a(j, l), b(j));
