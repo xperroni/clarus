@@ -44,6 +44,12 @@ public:
 
     const T &operator [] (int index) const;
 
+    bool operator == (const List &that) const;
+
+    bool operator != (const List &that) const;
+
+    bool operator < (const List &that) const;
+
     Buffer &operator * ();
 
     const Buffer &operator * () const;
@@ -104,6 +110,41 @@ template<class T> T &List<T>::operator [] (int index) {
 
 template<class T> const T &List<T>::operator [] (int index) const {
     return (*buffer)[index];
+}
+
+template<class T> bool List<T>::operator == (const List &that) const {
+    if (size() != that.size()) {
+        return false;
+    }
+
+    for (ListIteratorConst<T> i(*this), j(that); i.more();) {
+        const T &a = i.next();
+        const T &b = j.next();
+        if (a != b) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+template<class T> bool List<T>::operator != (const List &that) const {
+    return !(*this == that);
+}
+
+template<class T> bool List<T>::operator < (const List &that) const {
+    for (ListIteratorConst<T> i(*this), j(that); i.more() && j.more();) {
+        const T &a = i.next();
+        const T &b = j.next();
+        if (a < b) {
+            return true;
+        }
+        else if (b < a) {
+            return false;
+        }
+    }
+
+    return (size() < that.size());
 }
 
 template<class T> typename List<T>::Buffer& List<T>::operator * () {
