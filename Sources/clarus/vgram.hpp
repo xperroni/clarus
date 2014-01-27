@@ -21,6 +21,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #define CLARUS_VGRAM_HPP
 
 #include <clarus/vgram/bitstring.hpp>
+#include <clarus/vgram/intstring.hpp>
 #include <clarus/vgram/layer.hpp>
 #include <clarus/vgram/neuron.hpp>
 #include <clarus/vgram/network.hpp>
