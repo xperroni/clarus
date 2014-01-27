@@ -82,9 +82,9 @@ struct point: public Index<2> {
 
         void add(int i, int j);
 
-        cv::Mat mask(const cv::Size &size, int threshold = 0) const;
+        cv::Mat mask(const cv::Size &size, size_t threshold = 0) const;
 
-        void draw(cv::Mat &image, int size = 0) const;
+        void draw(cv::Mat &image, size_t size = 0) const;
     };
 
     typedef boost::function<std::set<point>(size_t)> distribution;

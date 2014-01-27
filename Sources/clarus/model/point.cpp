@@ -171,7 +171,7 @@ void point::cloud::merge(ClusterIterator &added) {
     }
 }
 
-void point::cloud::draw(cv::Mat &image, int size) const {
+void point::cloud::draw(cv::Mat &image, size_t size) const {
     for (ClusterIteratorConst k(*this); k.more();) {
         const cluster &c = k.next();
         if (c.size() >= size) {
@@ -180,7 +180,7 @@ void point::cloud::draw(cv::Mat &image, int size) const {
     }
 }
 
-cv::Mat point::cloud::mask(const cv::Size &size, int threshold) const {
+cv::Mat point::cloud::mask(const cv::Size &size, size_t threshold) const {
     cv::Mat data(size, CV_32S, cv::Scalar::all(255));
     for (ClusterIteratorConst k(*this); k.more();) {
         const cluster &c = k.next();
