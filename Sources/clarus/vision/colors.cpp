@@ -25,41 +25,58 @@ List<cv::Mat> colors::BGRL(const cv::Mat &bgr) {
     int rows = bgr.rows;
     int cols = bgr.cols;
 
+    int rows2 = rows / 2;
+    int cols2 = cols / 2;
+
     List<cv::Mat> mosaic;
-    mosaic.append(cv::Mat(rows / 2, cols / 2, CV_8U)); // Blue
-    mosaic.append(cv::Mat(rows / 2, cols / 2, CV_8U)); // Green
-    mosaic.append(cv::Mat(rows / 2, cols / 2, CV_8U)); // Red
-    mosaic.append(cv::Mat(rows / 2, cols / 2, CV_8U)); // Luminance
+    mosaic.append(cv::Mat(rows2, cols2, CV_8U)); // Blue
+    mosaic.append(cv::Mat(rows2, cols2, CV_8U)); // Green
+    mosaic.append(cv::Mat(rows2, cols2, CV_8U)); // Red
+    mosaic.append(cv::Mat(rows2, cols2, CV_8U)); // Luminance
 
     for (int i = 0; i < rows; i++) {
         int r = 1 - (i % 2);
-        const cv::Vec3b *row = bgr.ptr<cv::Vec3b>(i);
-        uchar *a = mosaic[0 + 2 * r].ptr<uchar>(i / 2);
-        uchar *b = mosaic[1 + 2 * r].ptr<uchar>(i / 2);
+        int i2 = i / 2;
+        if (i2 >= rows2) {
+            break;
+        }
 
-        if (r == 1) {
+        const cv::Vec3b *row = bgr.ptr<cv::Vec3b>(i);
+        uchar *a = mosaic[0 + 2 * r].ptr<uchar>(i2);
+        uchar *b = mosaic[1 + 2 * r].ptr<uchar>(i2);
+        uchar *m = a + cols2;
+        uchar *n = b + cols2;
+
+        if (r == 0) {
+            uchar* c[] = {a, b};
+            uchar* z[] = {m, n};
             for (int j = 0; j < cols; j++, row++) {
-                if (j % 2 == 0) {
-                    // See: http://stackoverflow.com/a/596241/476920
-                    const cv::Vec3b &pixel = *row;
-                    uchar B = pixel[0];
-                    uchar G = pixel[1];
-                    uchar R = pixel[2];
-                    *b = (B + G + G + G + G + R + R + R) >> 3;
-                    b++;
-                }
-                else {
-                    *a = (*row)[2];
-                    a++;
+                int k = j % 2;
+                if (c[k] < z[k]) {
+                    *(c[k]) = (*row)[k];
+                    c[k]++;
                 }
             }
         }
         else {
-            uchar* c[] = {a, b};
             for (int j = 0; j < cols; j++, row++) {
-                int k = j % 2;
-                *(c[k]) = (*row)[k];
-                c[k]++;
+                if (j % 2 != 0) {
+                    if (a < m) {
+                        *a = (*row)[2];
+                        a++;
+                    }
+                }
+                else {
+                    if (b < n) {
+                        // See: http://stackoverflow.com/a/596241/476920
+                        const cv::Vec3b &pixel = *row;
+                        uchar B = pixel[0];
+                        uchar G = pixel[1];
+                        uchar R = pixel[2];
+                        *b = (B + G + G + G + G + R + R + R) >> 3;
+                        b++;
+                    }
+                }
             }
         }
     }
