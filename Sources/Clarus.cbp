@@ -81,6 +81,8 @@
 		<Unit filename="clarus/model/ransac.hpp" />
 		<Unit filename="clarus/vgram.hpp" />
 		<Unit filename="clarus/vgram/bitstring.hpp" />
+		<Unit filename="clarus/vgram/intstring.cpp" />
+		<Unit filename="clarus/vgram/intstring.hpp" />
 		<Unit filename="clarus/vgram/layer.hpp" />
 		<Unit filename="clarus/vgram/network.hpp" />
 		<Unit filename="clarus/vgram/neuron.hpp" />
