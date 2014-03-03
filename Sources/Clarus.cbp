@@ -109,6 +109,8 @@
 		<Unit filename="clarus/vision/logpolar.hpp" />
 		<Unit filename="clarus/vision/minchinton.cpp" />
 		<Unit filename="clarus/vision/minchinton.hpp" />
+		<Unit filename="clarus/vision/segment.cpp" />
+		<Unit filename="clarus/vision/segment.hpp" />
 		<Extensions>
 			<envvars />
 			<code_completion />
