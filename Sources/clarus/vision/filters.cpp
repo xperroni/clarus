@@ -175,6 +175,43 @@ cv::Mat filter::gamma(const cv::Mat &src, double g) {
     return dst;
 }
 
+cv::Mat filter::gradients(const cv::Mat &l) {
+    int rows = l.rows;
+    int cols = l.cols;
+
+    /// Generate grad_x and grad_y
+    cv::Mat grad_x = cv::Mat::zeros(rows, cols, CV_16S);
+    cv::Mat grad_y = cv::Mat::zeros(rows, cols, CV_16S);
+
+    /// Gradient X
+    cv::Sobel(l, grad_x, CV_16S, 1, 0, 3);
+
+    /// Gradient Y
+    cv::Sobel(l, grad_y, CV_16S, 0, 1, 3);
+
+    cv::Mat out(l.size(), CV_8U, cv::Scalar::all(0));
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            double rads = atan2(fabs(grad_y.at<int16_t>(i, j)), grad_x.at<int16_t>(i, j));
+            int hue = ((int) (255 * (rads / M_PI))) % 256;
+/*
+            int hue = (
+                0.0 * M_PI <= rads && rads < 0.5 * M_PI ? 0 :
+                0.5 * M_PI <= rads && rads < 1.0 * M_PI ? 64 :
+                1.0 * M_PI <= rads && rads < 1.5 * M_PI ? 128 :
+                1.5 * M_PI <= rads && rads < 2.0 * M_PI ?  255
+            );
+*/
+            //out.at<cv::Vec3b>(i, j) = cv::Vec3b(hue, 127, 255);
+            out.at<uint8_t>(i, j) = hue;
+        }
+    }
+
+    //cv::cvtColor(out.clone(), out, CV_HLS2BGR);
+
+    return out;
+}
+
 List<cv::Mat> filter::laws(const cv::Mat &data, size_t w) {
     static const Kernel<5> *laws_masks[] = {
         new Kernel<5>( // E5E5

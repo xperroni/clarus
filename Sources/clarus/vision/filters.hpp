@@ -127,6 +127,8 @@ namespace filter {
 
     cv::Mat gamma(const cv::Mat &src, double g);
 
+    cv::Mat gradients(const cv::Mat &l);
+
     List<cv::Mat> laws(const cv::Mat &data, size_t w);
 
     cv::Mat normalize(const cv::Mat &data, size_t w);
