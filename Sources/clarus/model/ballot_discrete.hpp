@@ -34,7 +34,9 @@ template<class X> class ballot::discrete {
 public:
     void vote(const X &x);
 
-    X winner();
+    const X &winner() const;
+
+    int count() const;
 };
 
 template<class X> void ballot::discrete<X>::vote(const X &x) {
@@ -46,19 +48,23 @@ template<class X> void ballot::discrete<X>::vote(const X &x) {
     }
 }
 
-template<class X> X ballot::discrete<X>::winner() {
-    X x = votes.begin()->first;
+template<class X> const X &ballot::discrete<X>::winner() const {
+    typename Votes::const_iterator w = votes.begin();
     int count = 0;
 
-    for (typename Votes::iterator i = votes.begin(), n = votes.end(); i != n; ++i) {
+    for (typename Votes::const_iterator i = votes.begin(), n = votes.end(); i != n; ++i) {
         int voting = i->second;
         if (voting > count) {
             count = voting;
-            x = i->first;
+            w = i;
         }
     }
 
-    return x;
+    return w->first;
+}
+
+template<class X> int ballot::discrete<X>::count() const {
+    return votes.find(winner())->second;
 }
 
 #endif
