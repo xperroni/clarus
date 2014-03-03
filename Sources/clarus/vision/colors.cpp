@@ -22,6 +22,11 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <clarus/vision/filters.hpp>
 
 List<cv::Mat> colors::BGRL(const cv::Mat &bgr) {
+    List<cv::Mat> bgrl = channels(bgr);
+    bgrl.append(lightness(bgr));
+    return bgrl;
+
+/*
     int rows = bgr.rows;
     int cols = bgr.cols;
 
@@ -82,6 +87,7 @@ List<cv::Mat> colors::BGRL(const cv::Mat &bgr) {
     }
 
     return mosaic;
+*/
 }
 
 List<cv::Mat> colors::channels(const cv::Mat &image) {
