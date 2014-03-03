@@ -25,26 +25,26 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <cstdarg>
 
 template<size_t s> struct Kernel: cv::Mat {
-    Kernel(float k0, ...);
+    Kernel(double k0, ...);
 
     cv::Mat operator () (const cv::Mat &data) const;
 };
 
-template<size_t s> Kernel<s>::Kernel(float k0, ...):
-    cv::Mat(s, s, CV_32F)
+template<size_t s> Kernel<s>::Kernel(double k0, ...):
+    cv::Mat(s, s, CV_64F)
 {
     va_list args;
     va_start(args, k0);
 
-    at<float>(0, 0) = k0;
+    at<double>(0, 0) = k0;
     for (size_t i = 1, n = s * s; i < n; i++) {
-        at<float>(i / s, i % s) = va_arg(args, double);
+        at<double>(i / s, i % s) = va_arg(args, double);
     }
 }
 
 template<size_t s> cv::Mat Kernel<s>::operator () (const cv::Mat &data) const {
     cv::Mat input;
-    data.convertTo(input, CV_32F);
+    data.convertTo(input, CV_64F);
 
     cv::Mat output;
     cv::filter2D(input, output, -1, *((cv::Mat*) this));
