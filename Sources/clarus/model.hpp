@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CLARUS_FIT_HPP
-#define CLARUS_FIT_HPP
+#ifndef CLARUS_MODEL_HPP
+#define CLARUS_MODEL_HPP
 
 #include <clarus/model/ballot.hpp>
 #include <clarus/model/line.hpp>

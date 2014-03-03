@@ -21,8 +21,8 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #define CLARUS_HPP
 
 #include <clarus/core.hpp>
-#include <clarus/model.hpp>
 #include <clarus/io.hpp>
+#include <clarus/model.hpp>
 #include <clarus/vgram.hpp>
 #include <clarus/vision.hpp>
 
