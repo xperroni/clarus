@@ -43,6 +43,8 @@ public:
 
     Tuple operator - (const Tuple& that) const;
 
+    Tuple operator - () const;
+
     Tuple operator * (const Tuple& that) const;
 
     Tuple operator / (const Tuple& that) const;
@@ -101,6 +103,15 @@ template<class T, size_t n> Tuple<T, n> Tuple<T, n>::operator - (const Tuple& th
     Tuple result;
     for (size_t i = 0; i < n; i++) {
         result.values[i] = this->values[i] - that.values[i];
+    }
+
+    return result;
+}
+
+template<class T, size_t n> Tuple<T, n> Tuple<T, n>::operator - () const {
+    Tuple result;
+    for (size_t i = 0; i < n; i++) {
+        result.values[i] = -(this->values[i]);
     }
 
     return result;
