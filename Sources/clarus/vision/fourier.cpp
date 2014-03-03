@@ -35,6 +35,37 @@ cv::Mat fourier::convolve(const cv::Mat &data, const cv::Mat &kernel) {
     return inverse(fourier, size);
 }
 
+inline float fourier_step(int wf, int ws, int width) {
+    float n = width / wf;
+    return (width - ws) / n;
+}
+
+cv::Mat fourier::tiles(const cv::Mat &data, int wf) {
+    int rows = data.rows - data.rows % wf;
+    int cols = data.cols - data.cols % wf;
+
+    int ws = (wf - 1) * 2;
+    float step_i = fourier_step(wf, ws, rows);
+    float step_j = fourier_step(wf, ws, cols);
+
+    int patches_i = rows / wf;
+    int patches_j = cols / wf;
+
+    cv::Mat out(rows, cols, CV_32F, cv::Scalar(0));
+    for (float i = 0; i < patches_i; i++) {
+        for (float j = 0; j < patches_j; j++) {
+            cv::Rect roi_patch(round(j * step_j), round(i * step_i), ws, ws);
+            cv::Mat patch(data, roi_patch);
+            cv::Mat mag = fourier::magnitude(fourier::transform(patch));
+
+            cv::Rect roi_mag(j * wf, i * wf, wf, wf);
+            mag.copyTo(out(roi_mag));
+        }
+    }
+
+    return out;
+}
+
 cv::Mat fourier::transform(const cv::Mat &data, const cv::Size &optimal) {
     cv::Size size = optimal;
     if (size.width == 0 || size.height == 0) {
@@ -52,7 +83,7 @@ cv::Mat fourier::transform(const cv::Mat &data, const cv::Size &optimal) {
     cv::dft(fourier, fourier, cv::DFT_COMPLEX_OUTPUT);
 
     // Cuts off negative frequencies, which are redundant for real inputs.
-    return fourier(cv::Rect(0, 0, fourier.cols, 1 + fourier.rows / 2));
+    return fourier(cv::Rect(0, 0, 1 + fourier.cols / 2, 1 + fourier.rows / 2));
 }
 
 cv::Mat fourier::inverse(const cv::Mat &fourier, const cv::Size &optimal) {

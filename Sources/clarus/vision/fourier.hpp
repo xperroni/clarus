@@ -27,6 +27,8 @@ namespace fourier {
 
     cv::Mat convolve(const cv::Mat &data, const cv::Mat &kernel);
 
+    cv::Mat tiles(const cv::Mat &data, int wf);
+
     cv::Mat transform(const cv::Mat &data, const cv::Size &optimal = cv::Size(0, 0));
 
     cv::Mat inverse(const cv::Mat &fourier, const cv::Size &optimal = cv::Size(0, 0));
