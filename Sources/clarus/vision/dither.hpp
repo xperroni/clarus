@@ -63,7 +63,7 @@ namespace dither {
 
 
     /*
-    Dithers an imeg to the given bit depth using a set of equally-spaced thresholds.
+    Dithers an image to the given bit depth using a set of equally-spaced thresholds.
 
     Arguments:
 
