@@ -26,7 +26,7 @@ namespace vgram {
     template<class W> class network;
 }
 
-template <class W> class vgram::network {
+template<class W> class vgram::network {
     typedef typename W::X X;
 
     typedef typename W::Y Y;
@@ -51,7 +51,7 @@ template <class W> class vgram::network {
 
     typedef output<Y> O;
 
-    layer<W> N_z;
+    layer<W> N;
 
     P p;
 
@@ -77,9 +77,12 @@ template<class W> typename vgram::network<W>::O vgram::network<W>::get(const X &
     for (gamma c(a); c.more(); c.next()) {
         const J &j = c.input();
         const L &l = c.neuron();
-        output<G> o = N_z.get(l, a(j, l));
+        const B &i = a(j, l);
+        output<G> o = N.get(l, i);
         if (!o.empty()) {
-            w.add(j, l, o.value(), o.error());
+            const G &g = o.value();
+            size_t e = o.error();
+            w.add(j, l, g, e);
         }
     }
 
@@ -93,7 +96,9 @@ template<class W> void vgram::network<W>::set(const X &x, const Y &y) {
     for (gamma c(a, b); c.more(); c.next()) {
         const J &j = c.input();
         const L &l = c.neuron();
-        N_z.set(l, a(j, l), b(j));
+        const B &i = a(j, l);
+        const G &g = b(j);
+        N.set(l, i, g);
     }
 }
 
