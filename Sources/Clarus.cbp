@@ -71,6 +71,8 @@
 		<Unit filename="clarus/model/ballot.hpp" />
 		<Unit filename="clarus/model/ballot_discrete.hpp" />
 		<Unit filename="clarus/model/ballot_weighted.hpp" />
+		<Unit filename="clarus/model/circle.cpp" />
+		<Unit filename="clarus/model/circle.hpp" />
 		<Unit filename="clarus/model/line.cpp" />
 		<Unit filename="clarus/model/line.hpp" />
 		<Unit filename="clarus/model/munkres.cpp" />
