@@ -20,8 +20,9 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #ifndef LINE_HPP
 #define LINE_HPP
 
+#include <clarus/core/list.hpp>
+
 #include <string>
-#include <vector>
 
 class LineModel {
 public:
@@ -29,7 +30,7 @@ public:
 
     typedef std::pair<Domain, Domain> Datum;
 
-    typedef std::vector<Datum> Data;
+    typedef List<Datum> Data;
 
     typedef Domain Distance;
 
