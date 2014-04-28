@@ -66,6 +66,10 @@ public:
 
     void join();
 
+    template<typename T> locked_ptr<T> read(const std::string &name);
+
+    template<typename T> locked_ptr<T> write(const std::string &name);
+
     bool has(const std::string &name);
 
     template<typename T> T &get(const std::string &name);
@@ -74,6 +78,14 @@ public:
 
     template<typename T> T &set(const std::string &name, T *value);
 };
+
+template<typename T> locked_ptr<T> Looper::read(const std::string &name) {
+    return locker.read(get<T>(name));
+}
+
+template<typename T> locked_ptr<T> Looper::write(const std::string &name) {
+    return locker.write(get<T>(name));
+}
 
 template<typename T> T &Looper::get(const std::string &name) {
     return locker.read(table)->get<T>(name);
