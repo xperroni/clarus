@@ -21,13 +21,17 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <fstream>
 
-Gnuplot::Gnuplot():
+Gnuplot::Gnuplot(S setup):
     OutputCommand("cat %s | gnuplot")
 {
+    setup(*this);
+}
+
+void Gnuplot::NOTHING(Gnuplot& gnuplot) {
     // Nothing to do.
 }
 
-void set_defaults(Gnuplot &gnuplot) {
+void Gnuplot::DEFAULTS(Gnuplot &gnuplot) {
     gnuplot("set terminal x11");   /* drawing destination */
     gnuplot("set grid");  /* draw grid */
     gnuplot("set mouse");  /* use mouse */
