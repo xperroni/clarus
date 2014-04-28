@@ -62,7 +62,7 @@ inline List<int> blob_neighbors(
 cv::Mat segment::blob(const cv::Mat &data, float threshold) {
     int rows = data.rows;
     int cols = data.cols;
-    cv::Mat labels(rows, cols, CV_32F, cv::Scalar(0));
+    cv::Mat labels(rows, cols, CV_64F, cv::Scalar(0));
     std::map<int, int> linked;
 
     for (int i = 0; i < rows; i++) {
@@ -97,7 +97,7 @@ cv::Mat segment::kmeans(const cv::Mat &image, int cluster_number) {
     cv::Mat reshaped_image = image.reshape(1, image.cols * image.rows);
 
     cv::Mat reshaped_image32f;
-    reshaped_image.convertTo(reshaped_image32f, CV_32FC1, 1.0 / 255.0);
+    reshaped_image.convertTo(reshaped_image32f, CV_64FC1, 1.0 / 255.0);
 
     cv::Mat labels;
     cv::TermCriteria criteria(cv::TermCriteria::COUNT, 100, 1);

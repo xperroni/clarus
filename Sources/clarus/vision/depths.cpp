@@ -23,7 +23,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 cv::Mat depths::load(const std::string &path, const cv::Size &size) {
     std::ifstream file(path.c_str());
-    cv::Mat depths(size, CV_32F, -1.0);
+    cv::Mat depths(size, CV_64F, -1.0);
     for (int i = 0, m = size.height; i < m; i++) {
         for (int j = 0, n = size.width; j < n; j++) {
             file >> depths.at<Depth>(i, j);

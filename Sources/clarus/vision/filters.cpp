@@ -133,7 +133,7 @@ bool filter::zero(const cv::Mat &src, int i, int j) {
 cv::Mat filter::energy(const cv::Mat &data, size_t w) {
     CHANNEL_WISE(energy, data, w);
 
-    cv::Mat e(data.size(), CV_32F);
+    cv::Mat e(data.size(), CV_64F);
 
     size_t u = w / 2;
     for (size_t i = 0, m = data.rows; i < m; i++) {
@@ -157,8 +157,8 @@ cv::Mat filter::gamma(const cv::Mat &src, double g) {
 
     cv::Mat data;
     int type = src.type();
-    if (type != CV_32F && type != CV_32F) {
-        src.convertTo(data, CV_32F);
+    if (type != CV_64F) {
+        src.convertTo(data, CV_64F);
     }
     else {
         data = src;
@@ -388,10 +388,10 @@ List<cv::Mat> filter::laws(const cv::Mat &data, size_t w) {
 cv::Mat filter::normalize(const cv::Mat &data, size_t w) {
     CHANNEL_WISE(normalize, data, w);
 
-    cv::Mat avg(data.size(), CV_32F);
+    cv::Mat avg(data.size(), CV_64F);
 
     cv::Mat values;
-    data.convertTo(values, CV_32F);
+    data.convertTo(values, CV_64F);
 
     size_t u = w / 2;
     for (size_t i = 0, m = data.rows; i < m; i++) {
@@ -552,7 +552,7 @@ cv::Mat filter::tantriggs(const cv::Mat &image, double a, double t, double g, do
 
     // Convert to floating point
     cv::Mat output;
-    image.convertTo(output, CV_32FC1);
+    image.convertTo(output, CV_64FC1);
 
     // Gamma correction
     output = gamma(output, g);
@@ -560,25 +560,29 @@ cv::Mat filter::tantriggs(const cv::Mat &image, double a, double t, double g, do
     // Difference of gaussians
     output = gaussian::difference(output, w0, w1);
 
-    return colors::discrete(output);
-/*
+    //return colors::discrete(output);
+
+    // Constrast equalization parameters
+    cv::Mat absd = cv::abs(output);
+    cv::Mat mind = cv::min(absd, t);
+
     // Constrast equalization (first part)
     cv::Mat powd;
-    cv::Mat absd = abs(output);
     cv::pow(absd, a, powd);
-    output = output / pow(cv::mean(powd)[0], 1.0 / a);
+    double mean1 = cv::mean(powd)[0];
+    output = output / pow(mean1, 1.0 / a);
 
     // Constrast equalization (second part)
-    cv::pow(cv::min(absd, t), a, powd);
-    output = output / pow(cv::mean(powd)[0], 1.0 / a);
+    cv::pow(mind, a, powd);
+    double mean2 = cv::mean(powd)[0];
+    output = output / pow(mean2, 1.0 / a);
 
     // Constrast equalization (third part)
     for(int i = 0, m = output.rows; i < m; i++) {
         for(int j = 0, n = output.cols; j < n; j++) {
-            output.at<float>(i, j) = t * tanh(output.at<float>(i, j) / t);
+            output.at<double>(i, j) = t * tanh(output.at<double>(i, j) / t);
         }
     }
 
     return colors::discrete(output);
-*/
 }

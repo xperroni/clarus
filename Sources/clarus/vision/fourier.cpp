@@ -51,7 +51,7 @@ cv::Mat fourier::tiles(const cv::Mat &data, int wf) {
     int patches_i = rows / wf;
     int patches_j = cols / wf;
 
-    cv::Mat out(rows, cols, CV_32F, cv::Scalar(0));
+    cv::Mat out(rows, cols, CV_64F, cv::Scalar(0));
     for (float i = 0; i < patches_i; i++) {
         for (float j = 0; j < patches_j; j++) {
             cv::Rect roi_patch(round(j * step_j), round(i * step_i), ws, ws);
@@ -76,7 +76,7 @@ cv::Mat fourier::transform(const cv::Mat &data, const cv::Size &optimal) {
     int m = size.height - data.rows;
     int n = size.width - data.cols;
     cv::copyMakeBorder(data, padded, 0, m, 0, n, cv::BORDER_CONSTANT, cv::Scalar::all(0));
-    cv:: Mat plane[] = {cv::Mat_<float>(padded), cv::Mat::zeros(padded.size(), CV_32F)};
+    cv:: Mat plane[] = {cv::Mat_<float>(padded), cv::Mat::zeros(padded.size(), CV_64F)};
 
     cv::Mat fourier;
     cv::merge(plane, 2, fourier);
