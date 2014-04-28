@@ -20,10 +20,13 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CLARUS_CORE_LIST_HPP
 #define CLARUS_CORE_LIST_HPP
 
+#include <clarus/core/types.hpp>
+
 #include <boost/shared_ptr.hpp>
 #include <opencv2/opencv.hpp>
 
 #include <cstddef>
+#include <stdexcept>
 #include <vector>
 
 template<class T> class List {
@@ -35,6 +38,8 @@ public:
     List();
 
     List(int length);
+
+    List(int length, const T &value);
 
     List(const Buffer &that);
 
@@ -64,9 +69,13 @@ public:
 
     T &append(const T &value = T());
 
+    void extend(const List &that);
+
     void clear();
 
     bool contains(const T &value);
+
+    T remove(int index);
 
     T &first();
 
@@ -92,6 +101,14 @@ template<class T> List<T>::List(int length):
     buffer(new Buffer(length))
 {
     // Nothing to do.
+}
+
+template<class T> List<T>::List(int length, const T &value):
+    buffer(new Buffer(length))
+{
+    for (int i = 0; i < length; i++) {
+        append(value);
+    }
 }
 
 template<class T> List<T>::List(const Buffer &that):
@@ -176,6 +193,12 @@ template<class T> T &List<T>::append(const T &value) {
     return buffer->back();
 }
 
+template<class T> void List<T>::extend(const List &that) {
+    for (ListIteratorConst<T> i(that); i.more();) {
+        append(i.next());
+    }
+}
+
 template<class T> void List<T>::clear() {
     buffer->clear();
 }
@@ -188,6 +211,21 @@ template<class T> bool List<T>::contains(const T &value) {
     }
 
     return false;
+}
+
+template<class T> T List<T>::remove(int index) {
+    if (index < 0 || index >= size()) {
+        throw std::runtime_error("Invalid index: " + types::to_string(index));
+    }
+
+    typename std::vector<T>::iterator i = buffer->begin();
+    for (int j = 0; j < index; ++j) {
+        ++i;
+    }
+
+    T value = *i;
+    buffer->erase(i);
+    return value;
 }
 
 template<class T> T &List<T>::first() {
