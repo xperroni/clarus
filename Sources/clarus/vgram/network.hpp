@@ -39,6 +39,8 @@ template<class W> class vgram::network {
 
     typedef typename W::L L;
 
+    typedef typename W::N N;
+
     typedef typename W::P P;
 
     typedef typename W::alpha alpha;
@@ -51,9 +53,9 @@ template<class W> class vgram::network {
 
     typedef output<Y> O;
 
-    layer<W> N;
-
     P p;
+
+    N n;
 
 public:
     network(const P &p);
@@ -64,7 +66,8 @@ public:
 };
 
 template<class W> vgram::network<W>::network(const P &_p):
-    p(_p)
+    p(_p),
+    n(p)
 {
     // Nothing to do.
 }
@@ -78,7 +81,7 @@ template<class W> typename vgram::network<W>::O vgram::network<W>::get(const X &
         const J &j = c.input();
         const L &l = c.neuron();
         const B &i = a(j, l);
-        output<G> o = N.get(l, i);
+        output<G> o = n.get(l, i);
         if (!o.empty()) {
             const G &g = o.value();
             size_t e = o.error();
@@ -98,7 +101,7 @@ template<class W> void vgram::network<W>::set(const X &x, const Y &y) {
         const L &l = c.neuron();
         const B &i = a(j, l);
         const G &g = b(j);
-        N.set(l, i, g);
+        n.set(l, i, g);
     }
 }
 
