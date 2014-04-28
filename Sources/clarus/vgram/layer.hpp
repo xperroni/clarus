@@ -31,11 +31,13 @@ namespace vgram {
 }
 
 template<class W> class vgram::layer {
-    typedef typename W::L L;
-
     typedef typename W::B B;
 
     typedef typename W::G G;
+
+    typedef typename W::L L;
+
+    typedef typename W::P P;
 
     typedef neuron<B, G> R;
 
@@ -46,11 +48,16 @@ template<class W> class vgram::layer {
     Neurons N_z;
 
 public:
+    layer(P &p);
+
     O get(const L &l, const B &b) const;
 
     void set(const L &l, const B &b, const G &g);
 };
 
+template<class W> vgram::layer<W>::layer(P &p) {
+    // Nothing to do.
+}
 
 template<class W> typename vgram::layer<W>::O vgram::layer<W>::get(const L &l, const B &b) const {
     typename Neurons::const_iterator n = N_z.find(l);
