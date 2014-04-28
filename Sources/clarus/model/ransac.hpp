@@ -20,22 +20,22 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #ifndef RANSAC_HPP
 #define RANSAC_HPP
 
+#include <clarus/core/list.hpp>
+
 #include <opencv2/opencv.hpp>
 
-#include <vector>
-
 template<class Model> class ransac {
-    typedef std::vector<Model> Models;
+    typedef List<Model> Models;
 
-    typedef typename std::vector<Model>::iterator ModelIterator;
+    typedef ListIterator<Model> ModelIterator;
 
     typedef typename Model::Datum Datum;
 
-    typedef std::vector<Datum> Data;
+    typedef List<Datum> Data;
 
-    typedef typename Data::iterator DataIterator;
+    typedef ListIterator<Datum> DataIterator;
 
-    typedef typename Data::const_iterator DataConstIterator;
+    typedef ListIteratorConst<Datum> DataIteratorConst;
 
     typedef typename Model::Distance Distance;
 
@@ -69,13 +69,13 @@ public:
 template<class Model> cv::RNG ransac<Model>::rng;
 
 template<class Model> void ransac<Model>::add(Models &models, const Model &model, const Distance &far) {
-    for (ModelIterator i = models.begin(), n = models.end(); i != n; ++i) {
-        if (model.distance(*i) < far) {
+    for (ModelIterator i(models); i.more();) {
+        if (model.distance(i.next()) < far) {
             return;
         }
     }
 
-    models.push_back(model);
+    models.append(model);
 }
 
 template<class Model> void ransac<Model>::next(
@@ -84,21 +84,21 @@ template<class Model> void ransac<Model>::next(
     const Model &model,
     const Distance &far
 ) {
-    for (ModelIterator i = models.begin(); i != n; ++i) {
-        if (model.distance(*i) < far) {
+    for (ModelIterator i(models); i != n;) {
+        if (model.distance(i.next()) < far) {
             return;
         }
     }
 
-    ++n;
+    n.next();
 }
 
 template<class Model> void ransac<Model>::remove(Data &samples, const Model &model, const Distance &near) {
     Data outliers;
-    for (DataIterator j = samples.begin(), n = samples.end(); j != n; ++j) {
-        Datum &datum = (*j);
+    for (DataIterator j(samples); j.more();) {
+        Datum &datum = j.next();
         if (model.distance(datum) > near) {
-            outliers.push_back(datum);
+            outliers.append(datum);
         }
     }
 
@@ -111,10 +111,10 @@ template<class Model> int ransac<Model>::fitness(
     const Data &data
 ) {
     Data consensus;
-    for (DataConstIterator i = data.begin(), n = data.end(); i != n; ++i) {
-        const Datum &datum = (*i);
+    for (DataIteratorConst i(data); i.more();) {
+        const Datum &datum = i.next();
         if (model.distance(datum) <= near) {
-            consensus.push_back(datum);
+            consensus.append(datum);
         }
     }
 
@@ -125,7 +125,7 @@ template<class Model> void ransac<Model>::sample(Data& samples, size_t n, const 
     int m = data.size();
     for (size_t i = 0; i < n; i++) {
         int index = rng(m);
-        samples.push_back(data[index]);
+        samples.append(data[index]);
     }
 }
 
@@ -173,8 +173,8 @@ template<class Model> void ransac<Model>::fit(
     const Data &data, size_t seed, const Distance &near, int rounds
 ) {
     Data samples = data;
-    for (ModelIterator i = models.begin(), n = models.end(); i != n && samples.size() >= seed;) {
-        Model &model = (*i);
+    for (ModelIterator i(models); i.more() && samples.size() >= seed;) {
+        Model &model = i.next();
         fit(model, samples, seed, near, rounds);
         remove(samples, model, near);
         next(i, models, model, separation);
