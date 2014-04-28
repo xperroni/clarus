@@ -21,6 +21,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #define CLARUS_MODEL_HPP
 
 #include <clarus/model/ballot.hpp>
+#include <clarus/model/circle.hpp>
 #include <clarus/model/line.hpp>
 #include <clarus/model/munkres.hpp>
 #include <clarus/model/point.hpp>
