@@ -36,17 +36,24 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add directory="/usr/local/include" />
 			<Add directory="./" />
 			<Add directory="../" />
 		</Compiler>
 		<Unit filename="clarus/clarus.hpp" />
 		<Unit filename="clarus/core.hpp" />
+		<Unit filename="clarus/core/bag.cpp" />
+		<Unit filename="clarus/core/bag.hpp" />
+		<Unit filename="clarus/core/context.cpp" />
+		<Unit filename="clarus/core/context.hpp" />
 		<Unit filename="clarus/core/index.hpp" />
 		<Unit filename="clarus/core/list.hpp" />
 		<Unit filename="clarus/core/list_iterator.hpp" />
 		<Unit filename="clarus/core/list_iterator_const.hpp" />
 		<Unit filename="clarus/core/locker.cpp" />
 		<Unit filename="clarus/core/locker.hpp" />
+		<Unit filename="clarus/core/loop.cpp" />
+		<Unit filename="clarus/core/loop.hpp" />
 		<Unit filename="clarus/core/looper.cpp" />
 		<Unit filename="clarus/core/looper.hpp" />
 		<Unit filename="clarus/core/math.cpp" />
@@ -65,16 +72,26 @@
 		<Unit filename="clarus/io/console.hpp" />
 		<Unit filename="clarus/io/gnuplot.cpp" />
 		<Unit filename="clarus/io/gnuplot.hpp" />
+		<Unit filename="clarus/io/http.cpp" />
+		<Unit filename="clarus/io/http.hpp" />
+		<Unit filename="clarus/io/microphone.cpp" />
+		<Unit filename="clarus/io/microphone.hpp" />
+		<Unit filename="clarus/io/speech.cpp" />
+		<Unit filename="clarus/io/speech.hpp" />
 		<Unit filename="clarus/io/viewer.cpp" />
 		<Unit filename="clarus/io/viewer.hpp" />
 		<Unit filename="clarus/model.hpp" />
 		<Unit filename="clarus/model/ballot.hpp" />
 		<Unit filename="clarus/model/ballot_discrete.hpp" />
 		<Unit filename="clarus/model/ballot_weighted.hpp" />
-		<Unit filename="clarus/model/circle.cpp" />
-		<Unit filename="clarus/model/circle.hpp" />
-		<Unit filename="clarus/model/line.cpp" />
-		<Unit filename="clarus/model/line.hpp" />
+		<Unit filename="clarus/model/cloud.cpp" />
+		<Unit filename="clarus/model/cloud.hpp" />
+		<Unit filename="clarus/model/cluster.cpp" />
+		<Unit filename="clarus/model/cluster.hpp" />
+		<Unit filename="clarus/model/dbscan.cpp" />
+		<Unit filename="clarus/model/dbscan.hpp" />
+		<Unit filename="clarus/model/line2d.cpp" />
+		<Unit filename="clarus/model/line2d.hpp" />
 		<Unit filename="clarus/model/munkres.cpp" />
 		<Unit filename="clarus/model/munkres.hpp" />
 		<Unit filename="clarus/model/point.cpp" />
@@ -113,6 +130,8 @@
 		<Unit filename="clarus/vision/minchinton.hpp" />
 		<Unit filename="clarus/vision/segment.cpp" />
 		<Unit filename="clarus/vision/segment.hpp" />
+		<Unit filename="clarus/vision/surfer.cpp" />
+		<Unit filename="clarus/vision/surfer.hpp" />
 		<Extensions>
 			<envvars />
 			<code_completion />
