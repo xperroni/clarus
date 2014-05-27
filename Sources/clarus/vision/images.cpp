@@ -23,6 +23,12 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <iostream>
 
+cv::Mat images::convert(const cv::Mat &image, int type) {
+    cv::Mat converted;
+    image.convertTo(converted, type);
+    return converted;
+}
+
 cv::Mat images::load(const std::string &path) {
     cv::Mat image = cv::imread(path);
     if (image.empty()) {

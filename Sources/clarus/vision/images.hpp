@@ -25,6 +25,8 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 
 namespace images {
+    cv::Mat convert(const cv::Mat &image, int type);
+
     cv::Mat load(const std::string &path);
 
     cv::Mat load(const std::string &folder, const std::string &name, const std::string &ext);
