@@ -1,313 +1,318 @@
-/*
-Copyright (c) Helio Perroni Filho <xperroni@gmail.com>
-
-This file is part of Clarus.
-
-Clarus is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Clarus is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Clarus. If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include <clarus/model/point.hpp>
+using clarus::Point;
+
+#include <clarus/core/list.hpp>
+using clarus::List;
+using clarus::ListIterator;
+using clarus::ListIteratorConst;
+
+#include <boost/function.hpp>
 
 #include <algorithm>
+#include <cstdarg>
+#include <cmath>
+#include <vector>
 
-point::cluster::cluster(int _range, int i0, int j0):
-    range(_range)
-{
-    append(point(i0, j0));
-    i_min = i0 - 2;
-    i_max = i0 + 2;
-    j_min = j0 - 2;
-    j_max = j0 + 2;
+typedef boost::function<double(double, double)> PointOp;
+
+Point::Point() {
+    // Nothing to do.
 }
 
-bool point::cluster::add(const point &p) {
-    append(p);
-    i_min = std::min(i_min, (int) p[0]);
-    i_max = std::max(i_max, (int) p[0]);
-    j_min = std::min(j_min, (int) p[1]);
-    j_max = std::max(j_max, (int) p[1]);
-    return true;
-}
-
-bool point::cluster::operator < (const cluster &other) const {
-    return size() < other.size();
-}
-
-bool point::cluster::add(int i, int j) {
-    point p(i, j);
-    if (
-        i_min <= i && i <= i_max &&
-        j_min <= j && j <= j_max
-    ) {
-        return add(p);
-    }
-
-    for (PointIterator k(*this); k.more(); k.next()) {
-        if (p.distance(*k) <= range) {
-            return add(p);
-        }
-    }
-
-    return false;
-}
-
-bool point::cluster::inside(int i, int j) const {
-    return (
-        i_min <= i && i <= i_max &&
-        j_min <= j && j <= j_max
-    );
-}
-
-bool point::cluster::inside(const cluster &other) const {
-    return (
-        inside(other.i_min, other.j_min) &&
-        inside(other.i_min, other.j_max) &&
-        inside(other.i_max, other.j_min) &&
-        inside(other.i_max, other.j_max)
-    );
-}
-
-bool point::cluster::merge(const cluster &other) {
-    if (!this->inside(other) && !other.inside(*this)) {
-        return false;
-    }
-
-    for (PointIteratorConst k(*this); k.more(); k.next()) {
-        add(*k);
-    }
-
-    return true;
-}
-
-void point::cluster::draw(cv::Mat &image) const {
-    static cv::Scalar RED(0, 0, 255);
-    static cv::Scalar YELLOW(0, 255, 255);
-
-    cv::Point a(j_min, i_min);
-    cv::Point b(j_max, i_max);
-    cv::rectangle(image, a, b, RED);
-/*
-    for (const_iterator i = begin(), n = end(); i != n; ++i) {
-        const point &p = *i;
-        circle(image, cv::Point(p[1], p[0]), 1, YELLOW);
-    }
-*/
-}
-
-cv::Mat point::cluster::extract(const cv::Mat &src) const {
-    cv::Rect roi(
-        std::max(j_min, 0),
-        std::max(i_min, 0),
-        std::min(j_max - j_min, src.cols),
-        std::min(i_max - i_min, src.rows)
-    );
-
-    cv::Mat region(src, roi);
-    return region;
-}
-
-void point::cluster::mask_points(cv::Mat &data, int label) const {
-    for (PointIteratorConst k(*this); k.more();) {
-        const point &p = k.next();
-        data.at<int>(p[0], p[1]) = label;
-    }
-}
-
-void point::cluster::mask_region(cv::Mat &data) const {
-    static cv::Scalar MAYBE = cv::Scalar::all(0);
-
-    cv::Point a(
-        std::max(0, j_min - 1),
-        std::max(0, i_min - 1)
-    );
-
-    cv::Point b(
-        std::min(data.cols, j_max + 1),
-        std::min(data.rows, i_max + 1)
-    );
-
-    cv::rectangle(data, a, b, MAYBE, CV_FILLED);
-}
-
-point::cloud::cloud(int _range):
-    range(_range)
+Point::Point(const Point &that):
+    point(*that.point)
 {
     // Nothing to do.
 }
 
-void point::cloud::add(int i, int j) {
-    for (ClusterIterator k(*this); k.more(); k.next()) {
-        if (k->add(i, j)) {
-            merge(k);
-            return;
-        }
+Point::Point(size_t dimensions, ...) {
+    va_list args;
+    va_start(args, dimensions);
+
+    for (size_t i = 0; i < dimensions; i++) {
+        double value = va_arg(args, double);
+        point.append(value);
     }
 
-    append(cluster(range, i, j));
+    va_end(args);
 }
 
-void point::cloud::merge(ClusterIterator &added) {
-    point::cluster &c = added.current();
-    for (ClusterIterator k(*this); k.more(); k.next()) {
-        if (k == added) {
-            continue;
-        }
-
-        if (k->merge(c)) {
-            added.erase();
-            return;
-        }
+Point::Point(const List<double> &values) {
+    for (ListIteratorConst<double> i(values); i.more();) {
+        double x = i.next();
+        point.append(x);
     }
 }
 
-void point::cloud::draw(cv::Mat &image, size_t size) const {
-    for (ClusterIteratorConst k(*this); k.more();) {
-        const cluster &c = k.next();
-        if (c.size() >= size) {
-            c.draw(image);
-        }
+Point::Point(const Point &p0, const Point &p1) {
+    ListIteratorConst<double> i(*p0);
+    ListIteratorConst<double> j(*p1);
+    while (i.more() && j.more()) {
+        double u = i.next();
+        double v = j.next();
+        point.append((u + v) / 2.0);
+    }
+
+    while (i.more()) {
+        double u = i.next();
+        point.append(u / 2.0);
+    }
+
+    while (j.more()) {
+        double v = j.next();
+        point.append(v / 2.0);
     }
 }
 
-cv::Mat point::cloud::mask(const cv::Size &size, size_t threshold) const {
-    cv::Mat data(size, CV_32S, cv::Scalar::all(255));
-    for (ClusterIteratorConst k(*this); k.more();) {
-        const cluster &c = k.next();
-        if (c.size() < threshold) {
-           continue;
-        }
-
-        c.mask_region(data);
-    }
-
-    int label = 1;
-    for (ClusterIteratorConst k(*this); k.more(); ++label) {
-        const cluster &c = k.next();
-        if (c.size() < threshold) {
-           continue;
-        }
-
-        c.mask_points(data, label);
-    }
-
-    return data;
-}
-
-point::gaussian::gaussian(double _sigma, const cv::Size &_size):
-    sigma(_sigma),
-    size(_size)
-{
+Point::~Point() {
     // Nothing to do.
 }
 
-int point::gaussian::sample(int c, int n) const {
-    static cv::RNG rng;
-
-    int i = rng.gaussian(sigma) + c;
-    if (i < 0) {
-        return 0;
-    }
-    else if (i >= n) {
-        return n - 1;
-    }
-
-    return i;
+const List<double> &Point::operator * () const {
+    return point;
 }
 
-point point::gaussian::operator () () const {
-    int in = size.height;
-    int ic = in / 2;
-
-    int jn = size.width;
-    int jc = jn / 2;
-
-    return point(
-        sample(ic, in),
-        sample(jc, jn)
-    );
+double &Point::operator [] (int index) {
+    return point[index];
 }
 
-std::set<point> point::gaussian::operator () (size_t n) const {
-    std::set<point> points;
-    while (points.size() < n) {
-        points.insert((*this)());
+const double &Point::operator [] (int index) const {
+    return point[index];
+}
+
+bool Point::operator == (const Point &that) const {
+    ListIteratorConst<double> i(this->point);
+    ListIteratorConst<double> j(that.point);
+    while (i.more() && j.more()) {
+        if(i.next() != j.next()) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Point::operator != (const Point &that) const {
+    return !(*this == that);
+}
+
+Point &Point::operator = (Point that) {
+    // Implementation of the copy-swap idiom
+    // See: http://www.cplusplus.com/articles/y8hv0pDG/
+    std::swap(*(this->point), *(that.point));
+    return *this;
+}
+
+Point &Point::operator += (const Point &that) {
+    ListIterator<double> i(this->point);
+    ListIteratorConst<double> j(that.point);
+    for (; i.more() && j.more(); i.next(), j.next()) {
+        *i += *j;
+    }
+
+    return *this;
+}
+
+Point Point::operator + (const Point &that) const {
+    return clarus::vectorize(clarus::add, *this, that);
+}
+
+Point Point::operator - (const Point &that) const {
+    return clarus::vectorize(clarus::sub, *this, that);
+}
+
+Point Point::operator * (const Point &that) const {
+    return clarus::vectorize(clarus::mul, *this, that);
+}
+
+Point Point::operator * (double v) const {
+    Point result;
+    List<double> &p = result.point;
+    for (ListIteratorConst<double> i(this->point); i.more();) {
+        p.append(i.next() * v);
+    }
+
+    return result;
+}
+
+Point Point::operator / (const Point &that) const {
+    return clarus::vectorize(clarus::div, *this, that);
+}
+
+Point Point::operator / (double v) const {
+    Point result;
+    List<double> &p = result.point;
+    for (ListIteratorConst<double> i(this->point); i.more();) {
+        p.append(i.next() / v);
+    }
+
+    return result;
+}
+
+size_t Point::dimension() const {
+    return point.size();
+}
+
+double clarus::angle2d(const Point &point) {
+    static const Point center(Point2D(0, 0));
+
+    return angle2d(center, point);
+}
+
+double clarus::angle2d(const Point &p0, const Point &p1) {
+    if (p0[0] > p1[0]) {
+        return angle2d(p1, p0);
+    }
+
+    double dx = p1[0] - p0[0];
+    double dy = p1[1] - p0[1];
+    return atan2(dy, dx);
+}
+
+cv::Rect clarus::bounds2d(const List<Point> &points) {
+    double x_min = DBL_MAX;
+    double y_min = DBL_MAX;
+    double x_max = 0;
+    double y_max = 0;
+    for (ListIteratorConst<Point> i(points); i.more();) {
+        const Point &p = i.next();
+        double x = p[0];
+        double y = p[1];
+        x_min = std::min(x, x_min);
+        y_min = std::min(y, y_min);
+        x_max = std::max(x, x_max);
+        y_max = std::max(y, y_max);
+    }
+
+    return cv::Rect(x_min, y_min, x_max - x_min, y_max - y_min);
+}
+
+double clarus::distance(const Point &p0) {
+    return pow(distance2(p0), 0.5);
+}
+
+double clarus::distance(const Point &p0, const Point &p1) {
+    return pow(distance2(p0, p1), 0.5);
+}
+
+double clarus::distance2(const Point &p0) {
+    double d = 0.0;
+    for (ListIteratorConst<double> i(*p0); i.more();) {
+        d += pow(i.next(), 2.0);
+    }
+
+    return d;
+}
+
+double clarus::distance2(const Point &p0, const Point &p1) {
+    if (p0.dimension() < p1.dimension()) {
+        return distance2(p1, p0);
+    }
+
+    double d = 0.0;
+    ListIteratorConst<double> i(*p0);
+    ListIteratorConst<double> j(*p1);
+    while (i.more() && j.more()) {
+        double u = i.next();
+        double v = j.next();
+        d += pow(u - v, 2.0);
+    }
+
+    while (i.more()) {
+        double u = i.next();
+        d += pow(u, 2.0);
+    }
+
+    return d;
+}
+
+bool clarus::inrange(const Point &pt, const Point &p0, const Point &pn) {
+    for (int i = 0, m = pt.dimension(); i < m; i++) {
+        double t = pt[i];
+        double a = p0[i];
+        double n = pn[i];
+        if (!(a <= t && t < n)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+Point clarus::mean(const List<Point> &points) {
+    double n = points.size();
+    if (n == 0.0) {
+        return Point();
+    }
+
+    Point sumd = Point0(points[0].dimension());
+    for (ListIteratorConst<Point> i(points); i.more();) {
+        const Point &point = i.next();
+        sumd += point;
+    }
+
+    return sumd / n;
+}
+
+Point clarus::Point0(size_t dimension) {
+    return Point(List<double>(dimension, 0.0));
+}
+
+Point clarus::Point2D(double x0, double x1) {
+    return Point(2, x0, x1);
+}
+
+Point clarus::Point2D(const cv::Point2f &p) {
+    return Point2D(p.x, p.y);
+}
+
+List<Point> clarus::Point2D(const List<cv::Point2f> &p) {
+    List<Point> points;
+    for(ListIteratorConst<cv::Point2f> i(p); i.more();) {
+        const cv::Point2f &q = i.next();
+        points.append(Point2D(q));
     }
 
     return points;
 }
 
-point::sampler::sampler() {
-    // Nothing to do.
+Point clarus::Point3D(double x0, double x1, double x2) {
+    return Point(3, x0, x1, x2);
 }
 
-point::sampler::sampler(size_t n, distribution p):
-    points(p(n))
-{
-    // Nothing to do.
+cv::Point2f clarus::PointCV(const Point &p) {
+    return cv::Point2f(p[0], p[1]);
 }
 
-point::range::range():
-    p0(0, 0),
-    pc(0, 0),
-    pn(0, 0)
-{
-    // Nothing to do.
+Point clarus::vectorize(PointOp op, const Point &a, const Point &b) {
+    Point p;
+    List<double> &values = p.point;
+    for (ListIteratorConst<double> i(*a), j(*b); i.more() && j.more();) {
+        double value = op(i.next(), j.next());
+        values.append(value);
+    }
+
+    return p;
 }
 
-point::range::range(size_t i0, size_t j0, size_t in, size_t jn):
-    p0(i0, j0),
-    pc((i0 + in) / 2, (j0 + jn) / 2),
-    pn(in, jn)
-{
-    // Nothing to do.
-}
+std::ostream &operator << (std::ostream &out, const Point &point) {
+    int n = point.dimension();
+    if (n == 0) {
+        out << "()";
+        return out;
+    }
 
-point::range::operator cv::Rect () const {
-    int x = p0[1];
-    int y = p0[0];
-    int width = pn[1] - x;
-    int height = pn[0] - y;
-    return cv::Rect(x, y, width, height);
-}
+    out << "(";
+    for (int i = 0;;) {
+        out << point[i];
+        if (++i >= n) {
+            break;
+        }
 
-bool point::range::contains(const point &p) const {
-    return (
-        p0[0] <= p[0] && p[0] < pn[0] &&
-        p0[1] <= p[1] && p[1] < pn[1]
-    );
-}
+        out << ", ";
+    }
 
-bool point::range::intersects(const range &that) const {
-    return !(
-        pn[0] <= that.p0[0] || that.pn[0] <= p0[0] ||
-        pn[1] <= that.p0[1] || that.pn[1] <= p0[1]
-    );
-}
+    out << ")";
 
-point::point(size_t i, size_t j):
-    Index<2>(i, j)
-{
-    // Nothing to do.
-}
-
-point::point(const cv::Rect &rect):
-    Index<2>(rect.y + rect.height / 2, rect.x + rect.width / 2)
-{
-    // Nothing to do.
-}
-
-point::operator cv::Point () const {
-    const point &p = *this;
-    return cv::Point(p[1], p[0]);
+    return out;
 }
