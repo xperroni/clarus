@@ -20,6 +20,8 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <clarus/vision/segment.hpp>
 
 #include <clarus/core/list.hpp>
+using clarus::List;
+using clarus::ListIteratorConst;
 
 #include <algorithm>
 
