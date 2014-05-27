@@ -123,17 +123,19 @@ namespace filter {
     */
     cv::Mat channelwise(Filter f, const cv::Mat &image);
 
+    cv::Mat convolve(const cv::Mat &data, const cv::Mat &kernel);
+
     cv::Mat energy(const cv::Mat &data, size_t w);
 
     cv::Mat gamma(const cv::Mat &src, double g);
 
     cv::Mat gradients(const cv::Mat &l);
 
-    List<cv::Mat> laws(const cv::Mat &data, size_t w);
+    clarus::List<cv::Mat> laws(const cv::Mat &data, size_t w);
 
     cv::Mat normalize(const cv::Mat &data, size_t w);
 
-    List<cv::Mat> prewitt(const cv::Mat &l);
+    clarus::List<cv::Mat> prewitt(const cv::Mat &l);
 
     cv::Mat sobel(const cv::Mat &l);
 

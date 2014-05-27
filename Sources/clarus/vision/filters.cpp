@@ -19,7 +19,12 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <clarus/vision/filters.hpp>
 
+#include <clarus/core/list.hpp>
+using clarus::List;
+using clarus::ListIterator;
+
 #include <clarus/core/types.hpp>
+
 #include <clarus/vision/colors.hpp>
 #include <clarus/vision/gaussian.hpp>
 
@@ -128,6 +133,33 @@ bool filter::zero(const cv::Mat &src, int i, int j) {
     }
 
     return true;
+}
+
+
+
+static cv::Mat convert_type(const cv::Mat &image, int type) {
+    cv::Mat converted;
+    image.convertTo(converted, type);
+    return converted;
+}
+
+cv::Mat filter::convolve(const cv::Mat &image, const cv::Mat &kernel) {
+    List<cv::Mat> channels;
+    List<cv::Mat> kernels;
+    cv::split(image, *channels);
+    cv::split(kernel, *kernels);
+
+    cv::Mat result = cv::Mat::zeros(image.size(), CV_64F);
+    for (ListIterator<cv::Mat> i(channels), j(kernels); i.more();) {
+        cv::Mat channel = convert_type(i.next(), CV_64F);
+        cv::Mat kernel = convert_type(j.next(), CV_64F);
+
+        cv::Mat output;
+        cv::filter2D(channel, output, -1, kernel);
+        result += output;
+    }
+
+    return result;
 }
 
 cv::Mat filter::energy(const cv::Mat &data, size_t w) {
