@@ -17,24 +17,58 @@ You should have received a copy of the GNU General Public License
 along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "camera.hpp"
+#include <clarus/io/camera.hpp>
+using clarus::Loop;
+using clarus::Looper;
+using clarus::Camera;
+using std::string;
 
 #include <stdexcept>
 
-Camera::Camera() {
-    camera.reset();
-}
-
 Camera::Camera(int index) {
-    camera.reset();
-    start(index);
+    looper.set<int>("index", index);
 }
 
-void Camera::start(int index) {
-    camera.reset(new cv::VideoCapture(index));
+Camera::~Camera() {
+    // Nothing to do.
+}
+
+static void display_feed(Looper &looper, Loop &loop) {
+    while (loop.running()) {
+        string &title = loop.get<string>("title");
+        locked_ptr<cv::VideoCapture> camera = loop.write<cv::VideoCapture>("camera");
+
+        cv::Mat frame;
+        camera->read(frame);
+        cv::imshow(title, frame);
+        cv::waitKey(30);
+    }
+}
+
+void Camera::display(const string &title) {
+    if (!running()) {
+        start();
+    }
+
+    looper.set<string>("title", title);
+    looper.start(display_feed);
+}
+
+void Camera::hide() {
+    looper.stop(true);
+    string &title = looper.get<string>("title");
+    cv::destroyWindow(title);
+}
+
+void Camera::start() {
+    int index = looper.get<int>("index");
+    cv::VideoCapture *camera = new cv::VideoCapture(index);
     if(!camera->isOpened()) {
+        delete camera;
         throw std::runtime_error("Could not connect to camera");
     }
+
+    looper.set<cv::VideoCapture>("camera", camera);
 
     // Hack to avoid the first few frames to be the same.
     for (int i = 0; i < 10; i++) {
@@ -43,12 +77,22 @@ void Camera::start(int index) {
 }
 
 void Camera::stop() {
-    camera.reset();
+    hide();
+    looper.set<cv::VideoCapture>("camera", NULL);
 }
 
 cv::Mat Camera::grab() {
+    if (!running()) {
+        start();
+    }
+
+    locked_ptr<cv::VideoCapture> locked = looper.write<cv::VideoCapture>("camera");
+
     cv::Mat frame;
-    locked_ptr<cv::VideoCapture> locked = locker.write(*camera);
     locked->read(frame);
     return frame;
+}
+
+bool Camera::running() {
+    return looper.has("camera");
 }

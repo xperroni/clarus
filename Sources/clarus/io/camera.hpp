@@ -20,27 +20,38 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <clarus/core/locker.hpp>
+#include <clarus/core/looper.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <opencv2/opencv.hpp>
 
-class Camera
-{
-    boost::shared_ptr<cv::VideoCapture> camera;
+#include <string>
 
-    Locker locker;
+namespace clarus {
+    class Camera;
+}
+
+class clarus::Camera {
+    Looper looper;
 
 public:
-    Camera();
+    Camera(int index = 0);
 
-    Camera(int index);
+    /*
+    Object destructor. Enforces polymorphism. Do not remove.
+    */
+    virtual ~Camera();
 
-    void start(int index = 0);
+    void display(const std::string &title = std::string("Camera"));
+
+    void hide();
+
+    void start();
 
     void stop();
 
     cv::Mat grab();
+
+    bool running();
 };
 
-#endif // CAMERA_HPP
+#endif
