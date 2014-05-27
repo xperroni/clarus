@@ -42,7 +42,7 @@ void Locker::wait() {
 
     This scheme allows several Lockers to each call wait() on the same Locker
     object, and be assured that they will be released from the wait after notify()
-    is called, even if wait() is called agan before the Locker checks the
+    is called, even if wait() is called again before the Locker checks the
     notification state.
     */
 
