@@ -30,11 +30,11 @@ template<class T> class Quadtree {
     struct node {
         typedef boost::shared_ptr<node> nodeP;
 
-        typedef List<nodeP> Children;
+        typedef clarus::List<nodeP> Children;
 
         typedef std::pair<cv::Point, T> Value;
 
-        typedef List<Value> Values;
+        typedef clarus::List<Value> Values;
 
         cv::Rect bounds;
 
@@ -98,7 +98,7 @@ template<class T> bool Quadtree<T>::node::add(const cv::Point &point, const T &v
         children.append().reset(new node(cv::Rect(xk, yk, xn, yn)));
     }
 
-    for (ListIterator<node> i(children); i.more();) {
+    for (clarus::ListIterator<node> i(children); i.more();) {
         nodeP &child = i.next();
         if (child->add(point, value)) {
             return true;
@@ -113,14 +113,14 @@ template<class T> void Quadtree<T>::node::query(const cv::Rect &range, Values &r
         return;
     }
 
-    for (ListIteratorConst<Value> i(values); i.more(); i.next()) {
+    for (clarus::ListIteratorConst<Value> i(values); i.more(); i.next()) {
         const cv::Point &point = i->first;
         if (point.inside(range)) {
             result.append(*i);
         }
     }
 
-    for (ListIterator<node> i(children); i.more();) {
+    for (clarus::ListIterator<node> i(children); i.more();) {
         nodeP &child = i.next();
         child->query(range, result);
     }
