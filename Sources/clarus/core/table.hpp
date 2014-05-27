@@ -46,9 +46,11 @@ class Table {
     std::map<std::string, boost::shared_ptr<Entry> > entries;
 
 public:
-    bool has(const std::string &name);
+    bool has(const std::string &name) const;
 
     template<typename T> T &get(const std::string &name);
+
+    template<typename T> T &get(const std::string &name, const T &fallback);
 
     template<typename T> T &set(const std::string &name, const T &value);
 
@@ -62,6 +64,10 @@ template<typename T> T &Table::get(const std::string &name) {
     }
 
     return *(record->value);
+}
+
+template<typename T> T &Table::get(const std::string &name, const T &fallback) {
+    return (has(name) ? get<T>(name) : set<T>(name, fallback));
 }
 
 template<typename T> T &Table::set(const std::string &name, const T &value) {

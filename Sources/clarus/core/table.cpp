@@ -19,6 +19,6 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <clarus/core/table.hpp>
 
-bool Table::has(const std::string &name) {
+bool Table::has(const std::string &name) const {
     return (entries.count(name) > 0);
 }
