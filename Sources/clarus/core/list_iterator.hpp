@@ -20,7 +20,11 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CLARUS_CORE_LIST_ITERATOR_HPP
 #define CLARUS_CORE_LIST_ITERATOR_HPP
 
-template<class T> class ListIterator
+namespace clarus {
+    template<class T> class ListIterator;
+}
+
+template<class T> class clarus::ListIterator
 {
     List<T> list;
 
@@ -50,11 +54,11 @@ public:
     T &next();
 };
 
-template<class T> ListIterator<T>::ListIterator() {
+template<class T> clarus::ListIterator<T>::ListIterator() {
     // Nothing to do.
 }
 
-template<class T> ListIterator<T>::ListIterator(List<T> &_list):
+template<class T> clarus::ListIterator<T>::ListIterator(List<T> &_list):
     list(_list),
     i(list->begin()),
     n(list->end())
@@ -62,35 +66,35 @@ template<class T> ListIterator<T>::ListIterator(List<T> &_list):
     // Nothing to do.
 }
 
-template<class T> bool ListIterator<T>::operator == (const ListIterator &that) const {
+template<class T> bool clarus::ListIterator<T>::operator == (const ListIterator &that) const {
     return (this->i == that.i);
 }
 
-template<class T> bool ListIterator<T>::operator != (const ListIterator &that) const {
+template<class T> bool clarus::ListIterator<T>::operator != (const ListIterator &that) const {
     return (this->i != that.i);
 }
 
-template<class T> T &ListIterator<T>::operator * () {
+template<class T> T &clarus::ListIterator<T>::operator * () {
     return *i;
 }
 
-template<class T> T *ListIterator<T>::operator -> () {
+template<class T> T *clarus::ListIterator<T>::operator -> () {
     return i.operator->();
 }
 
-template<class T> void ListIterator<T>::erase() {
+template<class T> void clarus::ListIterator<T>::erase() {
     list->erase(i);
 }
 
-template<class T> bool ListIterator<T>::more() const {
+template<class T> bool clarus::ListIterator<T>::more() const {
     return (i != n);
 }
 
-template<class T> T &ListIterator<T>::current() {
+template<class T> T &clarus::ListIterator<T>::current() {
     return *i;
 }
 
-template<class T> T &ListIterator<T>::next() {
+template<class T> T &clarus::ListIterator<T>::next() {
     T &value = *i;
     i++;
     return value;
