@@ -25,50 +25,48 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <opencv2/opencv.hpp>
 
 template<class Model> class ransac {
-    typedef List<Model> Models;
+    typedef clarus::List<Model> Models;
 
-    typedef ListIterator<Model> ModelIterator;
+    typedef clarus::ListIterator<Model> ModelIterator;
 
     typedef typename Model::Datum Datum;
 
-    typedef List<Datum> Data;
+    typedef clarus::List<Datum> Data;
 
-    typedef ListIterator<Datum> DataIterator;
+    typedef clarus::ListIterator<Datum> DataIterator;
 
-    typedef ListIteratorConst<Datum> DataIteratorConst;
-
-    typedef typename Model::Distance Distance;
+    typedef clarus::ListIteratorConst<Datum> DataIteratorConst;
 
     static cv::RNG rng;
 
-    static void add(Models &models, const Model &model, const Distance &far);
+    static void add(Models &models, const Model &model, const double &far);
 
-    static int fitness(const Model &model, const Distance &near, const Data &data);
+    static int fitness(const Model &model, const double &near, const Data &data);
 
-    static void next(ModelIterator &n, Models &models, const Model &model, const Distance &far);
+    static void next(ModelIterator &n, Models &models, const Model &model, const double &far);
 
-    static void remove(Data &samples, const Model &model, const Distance &near);
+    static void remove(Data &samples, const Model &model, const double &near);
 
     static void sample(Data& samples, size_t n, const Data &data);
 
 public:
-    static void fit(Model &model, const Data &data, int seed, const Distance &near, int rounds);
+    static void fit(Model &model, const Data &data, int seed, const double &near, int rounds);
 
     static void fit(
-        Models &models, size_t upto, const Distance &separation,
-        const Data &data, size_t seed, const Distance &near, int rounds,
+        Models &models, size_t upto, const double &separation,
+        const Data &data, size_t seed, const double &near, int rounds,
         const Model &base = Model()
     );
 
     static void fit(
-        Models &models, const Distance &separation,
-        const Data &data, size_t seed, const Distance &near, int rounds
+        Models &models, const double &separation,
+        const Data &data, size_t seed, const double &near, int rounds
     );
 };
 
 template<class Model> cv::RNG ransac<Model>::rng;
 
-template<class Model> void ransac<Model>::add(Models &models, const Model &model, const Distance &far) {
+template<class Model> void ransac<Model>::add(Models &models, const Model &model, const double &far) {
     for (ModelIterator i(models); i.more();) {
         if (model.distance(i.next()) < far) {
             return;
@@ -82,7 +80,7 @@ template<class Model> void ransac<Model>::next(
     ModelIterator &n,
     Models &models,
     const Model &model,
-    const Distance &far
+    const double &far
 ) {
     for (ModelIterator i(models); i != n;) {
         if (model.distance(i.next()) < far) {
@@ -93,7 +91,7 @@ template<class Model> void ransac<Model>::next(
     n.next();
 }
 
-template<class Model> void ransac<Model>::remove(Data &samples, const Model &model, const Distance &near) {
+template<class Model> void ransac<Model>::remove(Data &samples, const Model &model, const double &near) {
     Data outliers;
     for (DataIterator j(samples); j.more();) {
         Datum &datum = j.next();
@@ -107,7 +105,7 @@ template<class Model> void ransac<Model>::remove(Data &samples, const Model &mod
 
 template<class Model> int ransac<Model>::fitness(
     const Model &model,
-    const Distance &near,
+    const double &near,
     const Data &data
 ) {
     Data consensus;
@@ -133,7 +131,7 @@ template<class Model> void ransac<Model>::fit(
     Model &model,
     const Data &data,
     int seed,
-    const Distance &near,
+    const double &near,
     int rounds
 ) {
     Model tentative;
@@ -155,8 +153,8 @@ template<class Model> void ransac<Model>::fit(
 }
 
 template<class Model> void ransac<Model>::fit(
-    Models &models, size_t upto, const Distance &separation,
-    const Data &data, size_t seed, const Distance &near, int rounds,
+    Models &models, size_t upto, const double &separation,
+    const Data &data, size_t seed, const double &near, int rounds,
     const Model &base
 ) {
     Data samples = data;
@@ -169,8 +167,8 @@ template<class Model> void ransac<Model>::fit(
 }
 
 template<class Model> void ransac<Model>::fit(
-    Models &models, const Distance &separation,
-    const Data &data, size_t seed, const Distance &near, int rounds
+    Models &models, const double &separation,
+    const Data &data, size_t seed, const double &near, int rounds
 ) {
     Data samples = data;
     for (ModelIterator i(models); i.more() && samples.size() >= seed;) {
