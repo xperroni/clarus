@@ -18,6 +18,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <clarus/core/locker.hpp>
+using clarus::Locker;
 
 Locker::Locker():
     tally(0)
