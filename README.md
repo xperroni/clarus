@@ -3,7 +3,7 @@ Clarus
 
 Clarus is a library for machine learning, geared towards computer vision problems. It is developed in C++ 03 on top of [boost](http://www.boost.org/) and [OpenCV](http://opencv.org/). It is divided in several modules:
 
-* `core`: multi-threading facilities, the `Table` heterogeneous collection, and some other conveniences;
+* `core`: multi-threading facilities, the `Bag` heterogeneous collection, and some other conveniences;
 * `model`: classes and algorithms dealing with high-level (usually geometric) models and concepts;
 * `io`: facilities for interfacing with sensors (such as cameras) and displaying data;
 * `vgram`: an API for working with [VG-RAM Weightless Neural Networks](https://github.com/xperroni/Yamabiko/tree/master/2013-2);
