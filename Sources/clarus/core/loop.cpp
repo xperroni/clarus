@@ -7,7 +7,7 @@ static void run(Loop::F body, Loop &loop, bool &on) {
 }
 
 Loop::Loop(F body, Context *parent):
-    Context(parent),
+    proxy(parent),
     on(true)
 {
     thread.reset(

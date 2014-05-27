@@ -11,7 +11,9 @@ namespace clarus {
     class Loop;
 }
 
-class clarus::Loop: public Context {
+class clarus::Loop {
+    Context proxy;
+
     boost::shared_ptr<boost::thread> thread;
 
     bool on;
@@ -33,6 +35,20 @@ public:
     void stop(bool blocking = false);
 
     bool running() const;
+
+    template<class T> T &get(const std::string &name);
+
+    template<class T> T &get(const std::string &name, const T &fallback);
 };
 
-#endif // CLARUS_CORE_LOOP_HPP
+template<class T> T &clarus::Loop::get(const std::string &name) {
+    boost::shared_ptr<T> value = proxy.get<T>(name);
+    return *value;
+}
+
+template<class T> T &clarus::Loop::get(const std::string &name, const T &fallback) {
+    boost::shared_ptr<T> value = proxy.get<T>(name, fallback);
+    return *value;
+}
+
+#endif
