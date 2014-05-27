@@ -21,13 +21,22 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #define GNUPLOT_HPP
 
 #include <clarus/io/command.hpp>
+#include <clarus/model/point.hpp>
 
 #include <boost/function.hpp>
 
 #include <cstdio>
 #include <string>
 
-class Gnuplot: public OutputCommand {
+namespace clarus {
+    class Gnuplot;
+
+    void line2d(Gnuplot &gnuplot, int index, const clarus::Point &p0, const clarus::Point &p1);
+
+    void plot2d(Gnuplot &gnuplot, const std::string &path, int c0, int c1);
+}
+
+class clarus::Gnuplot: public clarus::OutputCommand {
 public:
     typedef boost::function<void(Gnuplot&)> S;
 
@@ -41,8 +50,4 @@ public:
     Gnuplot(S setup = NOTHING);
 };
 
-void plot2d(Gnuplot &gnuplot, const std::string &path, int c0, int c1);
-
-
-
-#endif // GNUPLOT_HPP
+#endif

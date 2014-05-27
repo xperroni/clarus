@@ -17,7 +17,9 @@ You should have received a copy of the GNU General Public License
 along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "gnuplot.hpp"
+#include <clarus/io/gnuplot.hpp>
+using clarus::Gnuplot;
+using clarus::OutputCommand;
 
 #include <fstream>
 
@@ -44,7 +46,23 @@ void Gnuplot::DEFAULTS(Gnuplot &gnuplot) {
     gnuplot("unset key");  /* hide graph legends */
 }
 
-void plot2d(Gnuplot &gnuplot, const std::string &path, int c0, int c1) {
+void clarus::line2d(Gnuplot &gnuplot, int index, const clarus::Point &p0, const clarus::Point &p1) {
+    std::string no = types::to_string(index);
+    std::string x1 = types::to_string(p0[0]);
+    std::string x2 = types::to_string(p1[0]);
+    std::string y1 = types::to_string(p0[1]);
+    std::string y2 = types::to_string(p1[1]);
+
+    std::string line = "set arrow " + no + " nohead from "
+        + x1 + "," + y1
+        + ",0 to "
+        + x2 + "," + y2
+        + ",0";
+
+    gnuplot(line);
+}
+
+void clarus::plot2d(Gnuplot &gnuplot, const std::string &path, int c0, int c1) {
     gnuplot("plot '-' using %d:%d with points notitle", c0, c1);
 
     std::ifstream file(path.c_str());
