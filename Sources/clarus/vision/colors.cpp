@@ -19,6 +19,9 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <clarus/vision/colors.hpp>
 
+#include <clarus/core/list.hpp>
+using clarus::List;
+
 #include <clarus/vision/filters.hpp>
 
 List<cv::Mat> colors::BGRL(const cv::Mat &bgr) {

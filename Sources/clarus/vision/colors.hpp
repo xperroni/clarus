@@ -30,17 +30,17 @@ namespace colors {
 
     Reference: http://en.wikipedia.org/wiki/Bayer_filter#.22Panchromatic.22_cells
     */
-    List<cv::Mat> BGRL(const cv::Mat &bgr);
+    clarus::List<cv::Mat> BGRL(const cv::Mat &bgr);
 
     /*
     Performs the given conversion to the color space, then splits the result across channels.
     */
-    List<cv::Mat> channels(const cv::Mat &image, int conversion);
+    clarus::List<cv::Mat> channels(const cv::Mat &image, int conversion);
 
     /*
     Splits the given input image across channels.
     */
-    List<cv::Mat> channels(const cv::Mat &image);
+    clarus::List<cv::Mat> channels(const cv::Mat &image);
 
     /*
     Convert the input data to unsigned single-byte type, possibly normalizing the
@@ -53,7 +53,7 @@ namespace colors {
     /*
     Converts the given BGR image to the HSL color space.
     */
-    List<cv::Mat> HLS(const cv::Mat &bgr);
+    clarus::List<cv::Mat> HLS(const cv::Mat &bgr);
 
     /*
     Converts the given BGR image to the HSL color space, hen returns its Hue channel.
