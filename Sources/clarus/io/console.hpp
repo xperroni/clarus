@@ -25,7 +25,11 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <cstdio>
 #include <string>
 
-class Console: public OutputCommand {
+namespace clarus {
+    class Console;
+}
+
+class clarus::Console: public OutputCommand {
 public:
     Console(const std::string &title);
 };

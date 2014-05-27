@@ -18,6 +18,8 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <clarus/io/console.hpp>
+using clarus::Console;
+using clarus::OutputCommand;
 
 Console::Console(const std::string &title):
     OutputCommand("xterm -title '" + title + "' -e 'cat %s'", true)
