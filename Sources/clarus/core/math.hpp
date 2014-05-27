@@ -20,7 +20,19 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CLARUS_CORE_MATH_HPP
 #define CLARUS_CORE_MATH_HPP
 
+#include <boost/function.hpp>
+
 namespace clarus {
+    typedef boost::function<double(double, double)> DoubleOp;
+
+    double add(double a, double b);
+
+    double sub(double a, double b);
+
+    double mul(double a, double b);
+
+    double div(double a, double b);
+
     double log(double x, double base);
 
     double log2(double x);

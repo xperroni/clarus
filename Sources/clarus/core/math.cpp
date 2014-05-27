@@ -21,6 +21,22 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <cmath>
 
+double clarus::add(double a, double b) {
+    return a + b;
+}
+
+double clarus::sub(double a, double b) {
+    return a - b;
+}
+
+double clarus::mul(double a, double b) {
+    return a * b;
+}
+
+double clarus::div(double a, double b) {
+    return a / b;
+}
+
 double clarus::log(double x, double base) {
     return ::log(x) / ::log(base);
 }
