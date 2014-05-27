@@ -31,5 +31,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <clarus/vision/kernel.hpp>
 #include <clarus/vision/logpolar.hpp>
 #include <clarus/vision/minchinton.hpp>
+#include <clarus/vision/segment.hpp>
+#include <clarus/vision/surfer.hpp>
 
 #endif

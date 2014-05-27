@@ -20,11 +20,14 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CLARUS_CORE_HPP
 #define CLARUS_CORE_HPP
 
+#include <clarus/core/bag.hpp>
+#include <clarus/core/context.hpp>
 #include <clarus/core/index.hpp>
 #include <clarus/core/list.hpp>
 #include <clarus/core/locker.hpp>
+#include <clarus/core/loop.hpp>
 #include <clarus/core/looper.hpp>
-#include <clarus/core/table.hpp>
+#include <clarus/core/math.hpp>
 #include <clarus/core/tuple.hpp>
 #include <clarus/core/types.hpp>
 

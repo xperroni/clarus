@@ -24,6 +24,9 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <clarus/io/command.hpp>
 #include <clarus/io/console.hpp>
 #include <clarus/io/gnuplot.hpp>
+#include <clarus/io/http.hpp>
+#include <clarus/io/microphone.hpp>
+#include <clarus/io/speech.hpp>
 #include <clarus/io/viewer.hpp>
 
 #endif
