@@ -17,7 +17,15 @@ You should have received a copy of the GNU General Public License
 along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "munkres.hpp"
+#include <clarus/model/munkres.hpp>
+
+#include <clarus/core/list.hpp>
+using clarus::List;
+using clarus::ListIterator;
+
+#include <clarus/model/point.hpp>
+using clarus::Point;
+using clarus::Point2D;
 
 #include <stdexcept>
 
@@ -181,15 +189,15 @@ int Munkres::step3() {
 int Munkres::step4() {
     // seq contains pairs of row/column values where we have found
     // either a star or a prime that is part of the ``alternating sequence``.
-    List<Assignment> seq;
+    List<Point> seq;
 
     // use saverow, savecol from step 3.
-    Assignment z0(saverow, savecol);
+    Point z0 = Point2D(saverow, savecol);
     seq.append(z0);
 
     // We have to find these two pairs:
-    Assignment z1(-1, -1);
-    Assignment z2n(-1, -1);
+    Point z1 = Point2D(-1, -1);
+    Point z2n = Point2D(-1, -1);
 
     /*
     Increment Set of Starred Zeros
@@ -212,8 +220,8 @@ int Munkres::step4() {
         madepair = false;
         for (row = 0 ; row < size; row++ ) {
             if (mask_matrix.at<int>(row, col) == STAR) {
-                z1.first = row;
-                z1.second = col;
+                z1[0] = row;
+                z1[1] = col;
                 if (seq.contains(z1)) {
                     continue;
                 }
@@ -232,8 +240,8 @@ int Munkres::step4() {
 
         for (col = 0; col < size; col++) {
             if (mask_matrix.at<int>(row, col) == PRIME) {
-                z2n.first = row;
-                z2n.second = col;
+                z2n[0] = row;
+                z2n[1] = col;
                 if (seq.contains(z2n)) {
                     continue;
                 }
@@ -245,24 +253,26 @@ int Munkres::step4() {
         }
     } while (madepair);
 
-    for (ListIterator<Assignment> i(seq); i.more(); i.next()) {
+    for (ListIterator<Point> i(seq); i.more();) {
+        const Point &p = i.next();
+
         // 2. Unstar each starred zero of the sequence.
-        if (mask_matrix.at<int>(i->first, i->second) == STAR) {
-            mask_matrix.at<int>(i->first, i->second) = NORMAL;
+        if (mask_matrix.at<int>(p[0], p[1]) == STAR) {
+            mask_matrix.at<int>(p[0], p[1]) = NORMAL;
         }
 
         // 3. Star each primed zero of the sequence,
         // thus increasing the number of starred zeros by one.
-        if (mask_matrix.at<int>(i->first, i->second) == PRIME) {
-            mask_matrix.at<int>(i->first, i->second) = STAR;
+        if (mask_matrix.at<int>(p[0], p[1]) == PRIME) {
+            mask_matrix.at<int>(p[0], p[1]) = STAR;
         }
     }
 
     // 4. Erase all primes, uncover all columns and rows,
     for (row = 0; row < size; row++) {
         for (col = 0 ; col < size; col++) {
-            if (mask_matrix.at<int>(row,col) == PRIME) {
-                mask_matrix.at<int>(row,col) = NORMAL;
+            if (mask_matrix.at<int>(row, col) == PRIME) {
+                mask_matrix.at<int>(row, col) = NORMAL;
             }
         }
     }
@@ -368,7 +378,7 @@ Munkres::Munkres(cv::Mat &_matrix, cv::Mat &_mask_matrix):
     }
 }
 
-List<Assignment> munkres(const cv::Mat &data, bool rowfirst) {
+List<Point> clarus::munkres(const cv::Mat &data, bool rowfirst) {
     size_t rows = data.rows;
     size_t cols = data.cols;
 
@@ -392,7 +402,7 @@ List<Assignment> munkres(const cv::Mat &data, bool rowfirst) {
     cv::Mat solution(costs.size(), CV_32S, cv::Scalar(NORMAL));
     Munkres solver(costs, solution);
 
-    List<Assignment> assignments;
+    List<Point> assignments;
     for (size_t i = 0; i < rows; i++) {
         int *cell = solution.ptr<int>(i);
         for (size_t j = 0; j < cols; j++, cell++) {
@@ -401,10 +411,10 @@ List<Assignment> munkres(const cv::Mat &data, bool rowfirst) {
             }
 
             if (rowfirst) {
-                assignments.append(std::make_pair(i, j));
+                assignments.append(Point2D(i, j));
             }
             else {
-                assignments.append(std::make_pair(j, i));
+                assignments.append(Point2D(j, i));
             }
         }
     }
