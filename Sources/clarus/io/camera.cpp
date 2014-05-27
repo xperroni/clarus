@@ -18,6 +18,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <clarus/io/camera.hpp>
+using clarus::locked_ptr;
 using clarus::Loop;
 using clarus::Looper;
 using clarus::Camera;
@@ -36,7 +37,7 @@ Camera::~Camera() {
 static void display_feed(Looper &looper, Loop &loop) {
     while (loop.running()) {
         string &title = loop.get<string>("title");
-        locked_ptr<cv::VideoCapture> camera = loop.write<cv::VideoCapture>("camera");
+        locked_ptr<cv::VideoCapture> camera = looper.write<cv::VideoCapture>("camera");
 
         cv::Mat frame;
         camera->read(frame);
@@ -56,12 +57,12 @@ void Camera::display(const string &title) {
 
 void Camera::hide() {
     looper.stop(true);
-    string &title = looper.get<string>("title");
+    string title = looper.fetch<string>("title");
     cv::destroyWindow(title);
 }
 
 void Camera::start() {
-    int index = looper.get<int>("index");
+    int index = looper.fetch<int>("index");
     cv::VideoCapture *camera = new cv::VideoCapture(index);
     if(!camera->isOpened()) {
         delete camera;
