@@ -17,7 +17,11 @@ You should have received a copy of the GNU General Public License
 along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "command.hpp"
+#include <clarus/io/command.hpp>
+using clarus::Command;
+using clarus::InputCommand;
+using clarus::OutputCommand;
+using clarus::List;
 
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
@@ -44,6 +48,10 @@ Command::Command(const std::string &format, const std::string &mode) {
     reset(fopen(path.c_str(), mode.c_str()), fclose);
 }
 
+Command::~Command() {
+    // Nothing to do.
+}
+
 InputCommand::InputCommand(const std::string &command):
     Command(command, "r")
 {
@@ -62,6 +70,16 @@ bool InputCommand::operator () (std::string &line) {
     line = std::string(buffer, length);
     free(buffer);
     return true;
+}
+
+List<char> InputCommand::operator () () {
+    FILE *file = get();
+    List<char> buffer;
+    for (int value = EOF; (value = fgetc(file)) != EOF;) {
+        buffer.append(value);
+    }
+
+    return buffer;
 }
 
 OutputCommand::OutputCommand(const std::string &command, bool _autoflush):

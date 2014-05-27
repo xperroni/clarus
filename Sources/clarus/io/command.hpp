@@ -20,24 +20,41 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CLARUS_IO_COMMAND_HPP
 #define CLARUS_IO_COMMAND_HPP
 
+#include <clarus/core/list.hpp>
+
 #include <boost/shared_ptr.hpp>
 
 #include <cstdio>
 #include <string>
 
-class Command: public boost::shared_ptr<FILE> {
+namespace clarus {
+    class Command;
+
+    class InputCommand;
+
+    class OutputCommand;
+}
+
+class clarus::Command: public boost::shared_ptr<FILE> {
 public:
     Command(const std::string &command, const std::string &mode);
+
+    /*
+    Virtual destructor. Enforces polymorphism. Do not remove.
+    */
+    virtual ~Command();
 };
 
-class InputCommand: private Command {
+class clarus::InputCommand: private Command {
 public:
     InputCommand(const std::string &command);
 
     bool operator () (std::string &line);
+
+    List<char> operator () ();
 };
 
-class OutputCommand: private Command {
+class clarus::OutputCommand: private Command {
     bool autoflush;
 
 public:
@@ -48,4 +65,4 @@ public:
     void flush();
 };
 
-#endif // PIPE_HPP
+#endif
