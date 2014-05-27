@@ -25,11 +25,24 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <boost/shared_ptr.hpp>
 #include <opencv2/opencv.hpp>
 
+#include <algorithm>
 #include <cstddef>
 #include <stdexcept>
 #include <vector>
 
-template<class T> class List {
+namespace clarus {
+    template<class T> class List;
+
+    template<class T, class F> void sort(List<T> &list);
+
+    template<class T, class F> void sort(List<T> &list, F cmp);
+
+    template<class T> List<T> sorted(const List<T> &list);
+
+    template<class T, class F> List<T> sorted(const List<T> &list, F cmp);
+}
+
+template<class T> class clarus::List {
     typedef std::vector<T> Buffer;
 
     boost::shared_ptr<Buffer> buffer;
@@ -37,11 +50,14 @@ template<class T> class List {
 public:
     List();
 
-    List(int length);
-
-    List(int length, const T &value);
+    List(size_t length, const T &value = T());
 
     List(const Buffer &that);
+
+    /*
+    Virtual destructor. Enforces polymorphism. Do not remove.
+    */
+    virtual ~List();
 
     List clone() const;
 
@@ -91,45 +107,41 @@ public:
 #include <clarus/core/list_iterator.hpp>
 #include <clarus/core/list_iterator_const.hpp>
 
-template<class T> List<T>::List():
+template<class T> clarus::List<T>::List():
     buffer(new Buffer())
 {
     // Nothing to do.
 }
 
-template<class T> List<T>::List(int length):
-    buffer(new Buffer(length))
+template<class T> clarus::List<T>::List(size_t length, const T &value):
+    buffer(new Buffer(length, value))
 {
     // Nothing to do.
 }
 
-template<class T> List<T>::List(int length, const T &value):
-    buffer(new Buffer(length))
-{
-    for (int i = 0; i < length; i++) {
-        append(value);
-    }
-}
-
-template<class T> List<T>::List(const Buffer &that):
+template<class T> clarus::List<T>::List(const Buffer &that):
     buffer(new Buffer(that))
 {
     // Nothing to do.
 }
 
-template<class T> List<T> List<T>::clone() const {
-    return List(buffer);
+template<class T> clarus::List<T>::~List() {
+    // Nothing to do.
 }
 
-template<class T> T &List<T>::operator [] (int index) {
+template<class T> clarus::List<T> clarus::List<T>::clone() const {
+    return List(*buffer);
+}
+
+template<class T> T &clarus::List<T>::operator [] (int index) {
     return (*buffer)[index];
 }
 
-template<class T> const T &List<T>::operator [] (int index) const {
+template<class T> const T &clarus::List<T>::operator [] (int index) const {
     return (*buffer)[index];
 }
 
-template<class T> bool List<T>::operator == (const List &that) const {
+template<class T> bool clarus::List<T>::operator == (const List &that) const {
     if (size() != that.size()) {
         return false;
     }
@@ -145,11 +157,11 @@ template<class T> bool List<T>::operator == (const List &that) const {
     return true;
 }
 
-template<class T> bool List<T>::operator != (const List &that) const {
+template<class T> bool clarus::List<T>::operator != (const List &that) const {
     return !(*this == that);
 }
 
-template<class T> bool List<T>::operator < (const List &that) const {
+template<class T> bool clarus::List<T>::operator < (const List &that) const {
     for (ListIteratorConst<T> i(*this), j(that); i.more() && j.more();) {
         const T &a = i.next();
         const T &b = j.next();
@@ -164,46 +176,46 @@ template<class T> bool List<T>::operator < (const List &that) const {
     return (size() < that.size());
 }
 
-template<class T> typename List<T>::Buffer& List<T>::operator * () {
+template<class T> typename clarus::List<T>::Buffer& clarus::List<T>::operator * () {
     return *buffer;
 }
 
-template<class T> const typename List<T>::Buffer& List<T>::operator * () const {
+template<class T> const typename clarus::List<T>::Buffer& clarus::List<T>::operator * () const {
     return *buffer;
 }
 
-template<class T> typename List<T>::Buffer *List<T>::operator -> () {
+template<class T> typename clarus::List<T>::Buffer *clarus::List<T>::operator -> () {
     return buffer.get();
 }
 
-template<class T> const typename List<T>::Buffer *List<T>::operator -> () const {
+template<class T> const typename clarus::List<T>::Buffer *clarus::List<T>::operator -> () const {
     return buffer.get();
 }
 
-template<class T> T &List<T>::at(int index) {
+template<class T> T &clarus::List<T>::at(int index) {
     return buffer->at(index);
 }
 
-template<class T> const T &List<T>::at(int index) const {
+template<class T> const T &clarus::List<T>::at(int index) const {
     return buffer->at(index);
 }
 
-template<class T> T &List<T>::append(const T &value) {
+template<class T> T &clarus::List<T>::append(const T &value) {
     buffer->push_back(value);
     return buffer->back();
 }
 
-template<class T> void List<T>::extend(const List &that) {
+template<class T> void clarus::List<T>::extend(const List &that) {
     for (ListIteratorConst<T> i(that); i.more();) {
         append(i.next());
     }
 }
 
-template<class T> void List<T>::clear() {
+template<class T> void clarus::List<T>::clear() {
     buffer->clear();
 }
 
-template<class T> bool List<T>::contains(const T &value) {
+template<class T> bool clarus::List<T>::contains(const T &value) {
     for (ListIteratorConst<T> i(*this); i.more();) {
         if (i.next() == value) {
             return true;
@@ -213,7 +225,7 @@ template<class T> bool List<T>::contains(const T &value) {
     return false;
 }
 
-template<class T> T List<T>::remove(int index) {
+template<class T> T clarus::List<T>::remove(int index) {
     if (index < 0 || index >= size()) {
         throw std::runtime_error("Invalid index: " + types::to_string(index));
     }
@@ -228,24 +240,46 @@ template<class T> T List<T>::remove(int index) {
     return value;
 }
 
-template<class T> T &List<T>::first() {
+template<class T> T &clarus::List<T>::first() {
     return buffer->front();
 }
 
-template<class T> const T &List<T>::first() const {
+template<class T> const T &clarus::List<T>::first() const {
     return buffer->front();
 }
 
-template<class T> T &List<T>::last() {
+template<class T> T &clarus::List<T>::last() {
     return buffer->back();
 }
 
-template<class T> const T &List<T>::last() const {
+template<class T> const T &clarus::List<T>::last() const {
     return buffer->back();
 }
 
-template<class T> size_t List<T>::size() const {
+template<class T> size_t clarus::List<T>::size() const {
     return buffer->size();
+}
+
+template<class T> void clarus::sort(List<T> &list) {
+    std::vector<T> &v = *list;
+    std::sort(v.begin(), v.end());
+}
+
+template<class T, class F> void clarus::sort(List<T> &list, F cmp) {
+    std::vector<T> &v = *list;
+    std::sort(v.begin(), v.end(), cmp);
+}
+
+template<class T> clarus::List<T> clarus::sorted(const List<T> &list) {
+    List<T> cloned = list.clone();
+    sort(cloned);
+    return cloned;
+}
+
+template<class T, class F> clarus::List<T> clarus::sorted(const List<T> &list, F cmp) {
+    List<T> cloned = list.clone();
+    sort(cloned, cmp);
+    return cloned;
 }
 
 #endif
