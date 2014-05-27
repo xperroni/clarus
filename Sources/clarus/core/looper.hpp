@@ -20,31 +20,19 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #ifndef CLARUS_CORE_LOOPER_HPP
 #define CLARUS_CORE_LOOPER_HPP
 
-#include <clarus/core/locker.hpp>
-#include <clarus/core/table.hpp>
+#include <clarus/core/context.hpp>
+#include <clarus/core/loop.hpp>
 
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
-class Looper {
-    typedef boost::function<void(Looper&, bool&)> Body;
+namespace clarus {
+    class Looper;
+}
 
-    struct Loop {
-        bool running;
-
-        boost::shared_ptr<boost::thread> thread;
-
-        Loop(Body body, Looper &looper);
-
-        void run(Body body, Looper &looper);
-    };
-
-    typedef boost::shared_ptr<Loop> LoopP;
-
-    typedef std::deque<LoopP> Loops;
-
-    Table table;
+class clarus::Looper: public Context {
+    typedef std::deque<Loop::P> Loops;
 
     Loops loops;
 
@@ -54,49 +42,24 @@ class Looper {
 
     size_t size();
 
-    void wipe();
-
 public:
-    // Locker object, can be used for synchronizing across tasks.
-    Locker locker;
+    typedef boost::function<void(Looper &looper, Loop &loop)> F;
 
-    void start(Body body);
+    /*
+    Default constructor.
+    */
+    Looper();
+
+    /*
+    Virtual destructor. Enforces polymorphism. Do not remove.
+    */
+    virtual ~Looper();
+
+    Loop::P start(F body);
 
     void stop(bool blocking = false);
 
     void join();
-
-    template<typename T> locked_ptr<T> read(const std::string &name);
-
-    template<typename T> locked_ptr<T> write(const std::string &name);
-
-    bool has(const std::string &name);
-
-    template<typename T> T &get(const std::string &name);
-
-    template<typename T> T &set(const std::string &name, const T &value);
-
-    template<typename T> T &set(const std::string &name, T *value);
 };
-
-template<typename T> locked_ptr<T> Looper::read(const std::string &name) {
-    return locker.read(get<T>(name));
-}
-
-template<typename T> locked_ptr<T> Looper::write(const std::string &name) {
-    return locker.write(get<T>(name));
-}
-
-template<typename T> T &Looper::get(const std::string &name) {
-    return locker.read(table)->get<T>(name);
-}
-
-template<typename T> T &Looper::set(const std::string &name, const T &value) {
-    return locker.write(table)->set<T>(name, value);
-}
-
-template<typename T> T &Looper::set(const std::string &name, T *value) {
-    return locker.write(table)->set<T>(name, value);
-}
 
 #endif

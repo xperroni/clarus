@@ -18,25 +18,22 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <clarus/core/looper.hpp>
+using clarus::Loop;
+using clarus::Looper;
 
 #include <boost/bind.hpp>
 
-Looper::Loop::Loop(Body body, Looper &looper):
-    running(true)
+Looper::Looper():
+    Context()
 {
-    thread.reset(
-        new boost::thread(
-            &Loop::run, this, body, boost::ref(looper)
-        )
-    );
+    // Nothing to do.
 }
 
-void Looper::Loop::run(Body body, Looper &looper) {
-    body(looper, running);
-    running = false;
+Looper::~Looper() {
+    // Nothing to do.
 }
 
-Looper::Loop &Looper::peek() {
+Loop &Looper::peek() {
     locked_ptr<Loops> loops = locker.read(this->loops);
     return *(loops->front());
 }
@@ -51,35 +48,31 @@ size_t Looper::size() {
     return loops->size();
 }
 
-void Looper::wipe() {
-    locked_ptr<Loops> loops = locker.read(this->loops);
-    for (Loops::iterator i = loops->begin(), n = loops->end(); i != n; ++i) {
-        LoopP &loop = (*i);
-        loop->running = false;
-    }
-}
+Loop::P Looper::start(F body) {
+    Loop::P loop(
+        new Loop(
+            boost::bind(body, boost::ref(*this), _1),
+            this
+        )
+    );
 
-void Looper::start(Body body) {
-    LoopP loop(new Loop(body, *this));
     locked_ptr<Loops> loops = locker.write(this->loops);
     loops->push_back(loop);
+    return loop;
 }
 
 void Looper::stop(bool blocking) {
-    wipe();
-    if (blocking) {
-        join();
+    while (size() > 0) {
+        Loop &loop = peek();
+        loop.stop(blocking);
+        pop();
     }
 }
 
 void Looper::join() {
     while (size() > 0) {
         Loop &loop = peek();
-        loop.thread->join();
+        loop.join();
         pop();
     }
-}
-
-bool Looper::has(const std::string &name) {
-    return locker.read(table)->has(name);
 }
