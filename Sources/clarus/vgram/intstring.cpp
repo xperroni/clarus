@@ -19,6 +19,10 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <clarus/vgram/intstring.hpp>
 
+#include <clarus/core/list.hpp>
+using clarus::List;
+using clarus::ListIteratorConst;
+
 #include <clarus/core/types.hpp>
 
 #include <stdexcept>

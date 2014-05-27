@@ -26,7 +26,7 @@ namespace vgram {
     class intstring;
 }
 
-class vgram::intstring: public List<long> {
+class vgram::intstring: public clarus::List<long> {
 public:
     intstring();
 
