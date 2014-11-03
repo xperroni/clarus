@@ -1,3 +1,6 @@
-*.depend
-*.layout
-Scraps/*
+*.a
+*.o
+CMakeCache.txt
+CMakeFiles
+CMakeFiles/*
+Makefile

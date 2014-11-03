@@ -9,13 +9,34 @@ Clarus is a library for machine learning, geared towards computer vision problem
 * `vgram`: an API for working with [VG-RAM Weightless Neural Networks](https://github.com/xperroni/Yamabiko/tree/master/2013-2);
 * `vision`: operations on images.
 
-Clarus is developed inside the [Code::Blocks](http://www.codeblocks.org/) IDE, and currently this is the only supported build environment. I intend to provide a set of [autotools](http://www.gnu.org/savannah-checkouts/gnu/automake/manual/html_node/index.html#Top) files for cross-platform building in the future.
+Build & Install
+---------------
+
+Clarus is built using [cmake](http://www.cmake.org/). To build the project as a set of static libraries open a terminal window and type the commands below:
+
+    $ cd $CLARUS_SOURCE/build/release
+    $ cmake -DCMAKE_BUILD_TYPE=Release ../..
+    $ make -j2
+    $ sudo make install
+
+If you'd rather have shared libraries, change the `cmake` command to:
+
+    $ cmake -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE=Release ../..
+
+Under Bash-compatible environments, the scripts `build.sh` and `clean.sh` can be used to quickly build the project and clean the compilation environment.
+
+Version History
+---------------
+
+**2014-11-03**
+
+After procrastinating for a long time I finally found the will to bite the bullet and move Clarus to a cross-platform build system. I ended up not using autotools though, going for [cmake](http://www.cmake.org/) instead. Along the way I documented some classes using [Doxygen](http://www.doxygen.org) notation (though there's still a long way to go), and also changed the project's file hierarchy, dividing source files between source and header trees. In fact I'm not convinced this last change was a good idea -- for one it makes harder to switch between a source file and its header, now that I dumped Code::Blocks for Kate -- so I may revisit this decision later on.
 
 TO DO
 -----
 
-* Provide a set of autotools files for building the library;
-* Document the API and source files;
+* Provide a script to generate system documentation from Doxygen-annotated files;
+* Complete the in-source API documentation;
 * Move the code base to C++ 11, when support is widespread enough.
 
 Trivia
