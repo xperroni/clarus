@@ -24,6 +24,8 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <boost/function.hpp>
 
+#include <opencv2/opencv.hpp>
+
 namespace clarus {
     typedef boost::function<double(double, double)> BinaryOp;
 
@@ -44,6 +46,8 @@ namespace clarus {
     double log(double x, double base);
 
     double log2(double x);
+
+    double max(const cv::Mat &data);
 }
 
 #endif
