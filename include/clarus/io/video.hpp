@@ -67,12 +67,12 @@ public:
     /**
     \brief Returns the current video frame.
     */
-    cv::Mat grab();
+    cv::Mat grab() const;
 
     /**
     \brief Returns whether there are more frames to be read.
     */
-    bool more();
+    bool more() const;
 
     /**
     \brief Returns the next video frame.

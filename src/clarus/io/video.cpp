@@ -41,11 +41,11 @@ void Video::close() {
     video.reset();
 }
 
-cv::Mat Video::grab() {
+cv::Mat Video::grab() const {
     return frame.clone();
 }
 
-bool Video::more() {
+bool Video::more() const {
     return left;
 }
 
