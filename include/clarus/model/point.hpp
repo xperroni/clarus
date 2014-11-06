@@ -40,6 +40,11 @@ namespace clarus {
     */
     double angle2d(const Point &p0, const Point &p1);
 
+    /**
+    \brief Returns the 2D coordinates of the highest value in the given matrix.
+    */
+    clarus::Point argmax(const cv::Mat &data);
+
     /*
     Returns the rectangle bounds of a point list.
     */

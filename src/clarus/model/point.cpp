@@ -202,6 +202,12 @@ double clarus::angle2d(const Point &p0, const Point &p1) {
     return atan2(dy, dx);
 }
 
+Point clarus::argmax(const cv::Mat &data) {
+    cv::Point maxLoc;
+    cv::minMaxLoc(data, NULL, NULL, NULL, &maxLoc);
+    return Point2D(maxLoc);
+}
+
 cv::Rect clarus::bounds2d(const List<Point> &points) {
     double x_min = DBL_MAX;
     double y_min = DBL_MAX;
