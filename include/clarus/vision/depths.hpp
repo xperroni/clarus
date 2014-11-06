@@ -22,6 +22,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <opencv2/opencv.hpp>
 
+#include <iostream>
 #include <string>
 
 namespace depths {
@@ -30,6 +31,8 @@ namespace depths {
     cv::Mat load(const std::string &path);
 
     void save(const cv::Mat &depths, const std::string &path);
+
+    void save(const cv::Mat &depths, std::ostream &out);
 
     cv::Mat bgr(const cv::Mat &depths, const cv::Size &scale = cv::Size(0, 0));
 }

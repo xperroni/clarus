@@ -71,16 +71,20 @@ cv::Mat depths::load(const std::string &path) {
 
 void depths::save(const cv::Mat &depths, const std::string &path) {
     std::ofstream file(path.c_str());
+    save(depths, file);
+}
+
+void depths::save(const cv::Mat &depths, std::ostream &out) {
     int rows = depths.rows;
     int cols = depths.cols;
 
-    file << "[";
+    out << "[";
     for (int i = 0;;) {
-        file << "[";
+        out << "[";
         for (int j = 0;;) {
-            file << depths.at<Depth>(i, j);
+            out << depths.at<Depth>(i, j);
             if (++j < cols) {
-                file << ", ";
+                out << ", ";
             }
             else {
                 break;
@@ -88,10 +92,10 @@ void depths::save(const cv::Mat &depths, const std::string &path) {
         }
 
         if (++i < rows) {
-            file << "]," << std::endl;
+            out << "]," << std::endl;
         }
         else {
-            file << "]]" << std::endl;
+            out << "]]" << std::endl;
             return;
         }
     }
