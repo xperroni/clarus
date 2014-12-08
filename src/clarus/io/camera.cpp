@@ -160,7 +160,7 @@ void Camera::close() {
     driver.reset();
 }
 
-bool Camera::opened() {
+bool Camera::opened() const {
     return (driver.get() != NULL);
 }
 

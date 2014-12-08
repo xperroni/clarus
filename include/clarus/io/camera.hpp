@@ -124,7 +124,7 @@ public:
 
     void close();
 
-    bool opened();
+    bool opened() const;
 
     void display(const std::string &title = std::string("Camera"));
 
