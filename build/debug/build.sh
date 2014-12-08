@@ -1,5 +1,1 @@
-#!/bin/bash
-
-cmake -DCMAKE_BUILD_TYPE=Debug ../..
-
-make -j2
+../build.sh
