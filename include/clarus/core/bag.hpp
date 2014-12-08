@@ -111,8 +111,9 @@ public:
     virtual ~Bag();
 
     /**
-    \brief Returns a reference to the value stored by the given name. If the name is not known,
-    throws an exception.
+    \brief Returns a reference to the value stored by the given name.
+
+    If the name is not known, throws an exception.
 
     Be aware that this method is not thread-safe. If the record is overwritten or deleted
     by another thread, the reference returned by this method will become invalid, likely
@@ -121,8 +122,9 @@ public:
     template<class T> T &fetch(const std::string &name);
 
     /**
-    \brief Returns a reference to the value stored by the given name. If the name is not known,
-    associate it to the fall-back value, the return it.
+    \brief Returns a reference to the value stored by the given name.
+
+    If the name is not known, associate it to the fall-back value, then return it.
 
     Be aware that this method is not thread-safe. If the record is overwritten or deleted
     by another thread, the reference returned by this method will become invalid, likely
