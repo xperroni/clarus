@@ -59,7 +59,10 @@ public:
     */
     virtual ~List();
 
-    List clone(bool deep = false) const;
+    /**
+    \brief Appends the given value to this list, then returns the updated list.
+    */
+    List operator , (const T &value);
 
     T &operator [] (int index);
 
@@ -85,11 +88,15 @@ public:
 
     T &append(const T &value = T());
 
+    List clone(bool deep = false) const;
+
     void extend(const List &that);
 
     void clear();
 
-    bool contains(const T &value);
+    bool contains(const T &value) const;
+
+    bool empty() const;
 
     T remove(int index);
 
@@ -129,16 +136,10 @@ template<class T> clarus::List<T>::~List() {
     // Nothing to do.
 }
 
-template<class T> clarus::List<T> clarus::List<T>::clone(bool deep) const {
-    if (deep) {
-        return List(Buffer(*buffer));
-    }
-    else {
-        return List(*buffer);
-    }
+template<class T> clarus::List<T> clarus::List<T>::operator , (const T &value) {
+    append(value);
+    return *this;
 }
-
-//template<> clarus::List<cv::Mat> clarus::List<cv::Mat>::clone(bool deep) const;
 
 template<class T> T &clarus::List<T>::operator [] (int index) {
     return (*buffer)[index];
@@ -212,6 +213,17 @@ template<class T> T &clarus::List<T>::append(const T &value) {
     return buffer->back();
 }
 
+template<class T> clarus::List<T> clarus::List<T>::clone(bool deep) const {
+    if (deep) {
+        return List(Buffer(*buffer));
+    }
+    else {
+        return List(*buffer);
+    }
+}
+
+//template<> clarus::List<cv::Mat> clarus::List<cv::Mat>::clone(bool deep) const;
+
 template<class T> void clarus::List<T>::extend(const List &that) {
     for (ListIteratorConst<T> i(that); i.more();) {
         append(i.next());
@@ -222,7 +234,7 @@ template<class T> void clarus::List<T>::clear() {
     buffer->clear();
 }
 
-template<class T> bool clarus::List<T>::contains(const T &value) {
+template<class T> bool clarus::List<T>::contains(const T &value) const {
     for (ListIteratorConst<T> i(*this); i.more();) {
         if (i.next() == value) {
             return true;
@@ -230,6 +242,10 @@ template<class T> bool clarus::List<T>::contains(const T &value) {
     }
 
     return false;
+}
+
+template<class T> bool clarus::List<T>::empty() const {
+    return (size() == 0);
 }
 
 template<class T> T clarus::List<T>::remove(int index) {
