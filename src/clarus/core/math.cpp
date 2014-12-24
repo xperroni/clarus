@@ -75,8 +75,20 @@ cv::Point clarus::argmax(const cv::Mat &data) {
     return maxLoc;
 }
 
+cv::Point clarus::argmin(const cv::Mat &data) {
+    cv::Point minLoc;
+    cv::minMaxLoc(data, NULL, NULL, &minLoc);
+    return minLoc;
+}
+
 double clarus::max(const cv::Mat &data) {
     double maxVal = 0.0;
     cv::minMaxLoc(data, NULL, &maxVal);
     return maxVal;
+}
+
+double clarus::min(const cv::Mat &data) {
+    double minVal = 0.0;
+    cv::minMaxLoc(data, &minVal);
+    return minVal;
 }

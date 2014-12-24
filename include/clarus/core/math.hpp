@@ -52,7 +52,14 @@ namespace clarus {
     */
     cv::Point argmax(const cv::Mat &data);
 
+    /**
+    \brief Returns the 2D coordinates of the lowest value in the given matrix.
+    */
+    cv::Point argmin(const cv::Mat &data);
+
     double max(const cv::Mat &data);
+
+    double min(const cv::Mat &data);
 }
 
 #endif
