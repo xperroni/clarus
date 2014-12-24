@@ -69,6 +69,12 @@ double clarus::log2(double x) {
     return ::log(x) * BASE2;
 }
 
+cv::Point clarus::argmax(const cv::Mat &data) {
+    cv::Point maxLoc;
+    cv::minMaxLoc(data, NULL, NULL, NULL, &maxLoc);
+    return maxLoc;
+}
+
 double clarus::max(const cv::Mat &data) {
     double maxVal = 0.0;
     cv::minMaxLoc(data, NULL, &maxVal);

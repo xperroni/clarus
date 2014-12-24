@@ -47,6 +47,11 @@ namespace clarus {
 
     double log2(double x);
 
+    /**
+    \brief Returns the 2D coordinates of the highest value in the given matrix.
+    */
+    cv::Point argmax(const cv::Mat &data);
+
     double max(const cv::Mat &data);
 }
 
