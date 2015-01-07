@@ -60,6 +60,8 @@ namespace clarus {
     double max(const cv::Mat &data);
 
     double min(const cv::Mat &data);
+
+    void shift(cv::Mat &data, int rows, int cols);
 }
 
 #endif

@@ -92,3 +92,8 @@ double clarus::min(const cv::Mat &data) {
     cv::minMaxLoc(data, &minVal);
     return minVal;
 }
+
+void clarus::shift(cv::Mat &data, int rows, int cols) {
+    cv::Mat transform = (cv::Mat_<double>(2, 3) << 1, 0, cols, 0, 1, rows);
+    cv::warpAffine(data, data, transform, data.size());
+}
