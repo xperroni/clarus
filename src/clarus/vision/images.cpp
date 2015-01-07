@@ -20,6 +20,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <clarus/vision/images.hpp>
 
 #include <clarus/vision/colors.hpp>
+#include <clarus/vision/filters.hpp>
 
 #include <iostream>
 
@@ -48,6 +49,14 @@ cv::Mat images::load(const std::string &path) {
     }
 
     return image;
+}
+
+cv::Mat images::normalize(const cv::Mat &image) {
+    CHANNEL_WISE(images::normalize, image);
+
+    cv::Mat normed;
+    cv::normalize(image, normed, 0, 255, cv::NORM_MINMAX, CV_8U);
+    return normed;
 }
 
 cv::Mat images::load(const std::string &folder, const std::string &name, const std::string &ext) {

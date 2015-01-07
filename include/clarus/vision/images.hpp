@@ -29,6 +29,8 @@ namespace images {
 
     cv::Mat convert(const cv::Mat &image, int type);
 
+    cv::Mat normalize(const cv::Mat &image);
+
     cv::Mat scale(const cv::Mat &image, const cv::Size &size, int interpolation = CV_INTER_LINEAR);
 
     cv::Mat load(const std::string &path);
