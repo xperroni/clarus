@@ -97,3 +97,9 @@ void clarus::shift(cv::Mat &data, int rows, int cols) {
     cv::Mat transform = (cv::Mat_<double>(2, 3) << 1, 0, cols, 0, 1, rows);
     cv::warpAffine(data, data, transform, data.size());
 }
+
+cv::Mat clarus::pow(const cv::Mat &data, double power) {
+    cv::Mat out;
+    cv::pow(data, power, out);
+    return out;
+}

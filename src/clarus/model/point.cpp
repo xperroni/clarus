@@ -230,18 +230,18 @@ Point clarus::center(const cv::Rect &rect) {
 }
 
 double clarus::distance(const Point &p0, int upto) {
-    return pow(distance2(p0, upto), 0.5);
+    return ::pow(distance2(p0, upto), 0.5);
 }
 
 double clarus::distance(const Point &p0, const Point &p1, int upto) {
-    return pow(distance2(p0, p1, upto), 0.5);
+    return ::pow(distance2(p0, p1, upto), 0.5);
 }
 
 double clarus::distance2(const Point &p0, int upto) {
     double d = 0.0;
     int k = 0;
     for (ListIteratorConst<double> i(*p0); i.more() && k < upto; k++) {
-        d += pow(i.next(), 2.0);
+        d += ::pow(i.next(), 2.0);
     }
 
     return d;
@@ -259,12 +259,12 @@ double clarus::distance2(const Point &p0, const Point &p1, int upto) {
     while (i.more() && j.more() && k++ < upto) {
         double u = i.next();
         double v = j.next();
-        d += pow(u - v, 2.0);
+        d += ::pow(u - v, 2.0);
     }
 
     while (i.more() && k++ < upto) {
         double u = i.next();
-        d += pow(u, 2.0);
+        d += ::pow(u, 2.0);
     }
 
     return d;

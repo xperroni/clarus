@@ -62,6 +62,8 @@ namespace clarus {
     double min(const cv::Mat &data);
 
     void shift(cv::Mat &data, int rows, int cols);
+
+    cv::Mat pow(const cv::Mat &data, double power);
 }
 
 #endif

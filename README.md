@@ -28,9 +28,13 @@ Under Bash-compatible environments, the scripts `build.sh` and `clean.sh` can be
 Version History
 ---------------
 
-**2014-12-24**
+**2014-01-12**
 
-A rather underwhelming update, mostly released to support other projects I'm working on and wanted to publish -- the visual processing library [Cight](https://github.com/xperroni/Cight) and its demo application [Dejavu](https://github.com/xperroni/Dejavu). The `core` module now includes `clarus::max()` and `clarus::argmax()` functions for OpenCV matrices, to save me from looking up the documentation of `cv::minMaxLoc()` every time I want to find the maximum value of a matrix. I also added `clarus::min()` and `clarus::argmin()` just for the sake of consistency, even though strangely I never seem to need finding the minimum of anything. Also, the list class `clarus::List` now provides an `empty()` method (to match the one provided by OpenCV's `cv::Mat` class) and an implementation of the comma operator to support single-line instantiation and filling. For example, to return an integer list containing four arguments, instead of:
+A rather underwhelming update, mostly released to support other projects I'm working on and wanted to publish -- the visual processing library [Cight](https://github.com/xperroni/Cight) and its demo application [Dejavu](https://github.com/xperroni/Dejavu).
+
+The `core` module now includes `clarus::max()` and `clarus::argmax()` functions for OpenCV matrices, to save me from looking up the documentation of `cv::minMaxLoc()` every time I want to find the maximum value of a matrix. I also added `clarus::min()` and `clarus::argmin()` just for the sake of consistency, even though strangely I never seem to need finding the minimum of anything. Similarly I've also created a `clarus::pow()` function for element-wise matrix exponentiation.
+
+The list class `clarus::List` now provides an `empty()` method (to match the one provided by OpenCV's `cv::Mat` class) and an implementation of the comma operator to support single-line instantiation and filling. For example, to return an integer list containing four arguments, instead of:
 
     List<int> l;
     l.append(1);
@@ -45,7 +49,7 @@ Now you can just write:
 
 The parentheses around the expression are optional but in my opinion they help clarify what is going on.
 
-On a side note, increasingly I feel the library is in need of an overhaul that addresses problems such as the tension between Clarus and OpenCV basic types (e.g. cv::Point vs. clarus::Point), style inconsistencies (e.g. the `vgram` module's letter case style, or not everything being under the `clarus` namespace) and the hodgepodge of implemented and sometimes semi-abandoned algorithms, especially in the `vision` module. I am also seriously thinking of getting rid of the multithreading classes; I might look into it after porting my working projects to ROS, which I intend to do sometime after February next year.
+On a side note, increasingly I feel the library is in need of an overhaul that addresses problems such as the tension between Clarus and OpenCV basic types (e.g. cv::Point vs. clarus::Point), style inconsistencies (e.g. the `vgram` module's letter case style, or not everything being under the `clarus` namespace) and the hodgepodge of implemented and sometimes semi-abandoned algorithms, especially in the `vision` module. I am also seriously thinking of getting rid of the multithreading classes; I might look into it after porting my working projects to ROS, which I intend to do sometime after February.
 
 **2014-11-03**
 

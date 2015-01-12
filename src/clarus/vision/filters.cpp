@@ -24,6 +24,7 @@ using clarus::List;
 using clarus::ListIterator;
 using clarus::ListIteratorConst;
 
+#include <clarus/core/math.hpp>
 #include <clarus/core/types.hpp>
 
 #include <clarus/model/point.hpp>
@@ -34,6 +35,7 @@ using clarus::distance2;
 #include <clarus/vision/colors.hpp>
 #include <clarus/vision/cvmat.hpp>
 #include <clarus/vision/gaussian.hpp>
+#include <clarus/vision/images.hpp>
 
 cv::Mat filter::channelwise(Filter f, const cv::Mat &image) {
     List<cv::Mat> channels;
@@ -113,40 +115,18 @@ cv::Mat filter::gamma(const cv::Mat &src, double g) {
 }
 
 cv::Mat filter::gradients(const cv::Mat &l) {
-    int rows = l.rows;
-    int cols = l.cols;
-
-    /// Generate grad_x and grad_y
-    cv::Mat grad_x = cv::Mat::zeros(rows, cols, CV_16S);
-    cv::Mat grad_y = cv::Mat::zeros(rows, cols, CV_16S);
-
-    /// Gradient X
+    // Gradient across X axis
+    cv::Mat grad_x;
     cv::Sobel(l, grad_x, CV_16S, 1, 0, 3);
 
-    /// Gradient Y
+    // Gradient across Y axis
+    cv::Mat grad_y;
     cv::Sobel(l, grad_y, CV_16S, 0, 1, 3);
 
-    cv::Mat out(l.size(), CV_8U, cv::Scalar::all(0));
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            double rads = atan2(fabs(grad_y.at<int16_t>(i, j)), grad_x.at<int16_t>(i, j));
-            int hue = ((int) (255 * (rads / M_PI))) % 256;
-/*
-            int hue = (
-                0.0 * M_PI <= rads && rads < 0.5 * M_PI ? 0 :
-                0.5 * M_PI <= rads && rads < 1.0 * M_PI ? 64 :
-                1.0 * M_PI <= rads && rads < 1.5 * M_PI ? 128 :
-                1.5 * M_PI <= rads && rads < 2.0 * M_PI ?  255
-            );
-*/
-            //out.at<cv::Vec3b>(i, j) = cv::Vec3b(hue, 127, 255);
-            out.at<uint8_t>(i, j) = hue;
-        }
-    }
+    // Gradient magnitude
+    cv::Mat grad_xy = clarus::pow(clarus::pow(grad_x, 2.0) + clarus::pow(grad_y, 2.0), 0.5);
 
-    //cv::cvtColor(out.clone(), out, CV_HLS2BGR);
-
-    return out;
+    return images::convert(grad_xy, CV_8U);
 }
 
 List<cv::Mat> filter::laws(const cv::Mat &data, size_t w) {
@@ -518,12 +498,12 @@ cv::Mat filter::tantriggs(const cv::Mat &image, double a, double t, double g, do
     cv::Mat powd;
     cv::pow(absd, a, powd);
     double mean1 = cv::mean(powd)[0];
-    output = output / pow(mean1, 1.0 / a);
+    output = output / ::pow(mean1, 1.0 / a);
 
     // Constrast equalization (second part)
     cv::pow(mind, a, powd);
     double mean2 = cv::mean(powd)[0];
-    output = output / pow(mean2, 1.0 / a);
+    output = output / ::pow(mean2, 1.0 / a);
 
     // Constrast equalization (third part)
     for(int i = 0, m = output.rows; i < m; i++) {
