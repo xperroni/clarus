@@ -82,6 +82,13 @@ public:
 
     const Buffer *operator -> () const;
 
+    /**
+    \brief Returns a subset of this list, from index \c a up to <c>b - 1</c>.
+
+    Throws a <c>std::runtime_error</c> if the index range is illegal.
+    */
+    List operator () (int a, int b) const;
+
     T &at(int index);
 
     const T &at(int index) const;
@@ -198,6 +205,26 @@ template<class T> typename clarus::List<T>::Buffer *clarus::List<T>::operator ->
 
 template<class T> const typename clarus::List<T>::Buffer *clarus::List<T>::operator -> () const {
     return buffer.get();
+}
+
+template<class T> clarus::List<T> clarus::List<T>::operator () (int a, int b) const {
+    int n = size();
+    if (0 > a || a >= b || b >= n) {
+        std::string error =
+            std::string("Illegal range ") +
+            "(" + types::to_string(a) + ", " + types::to_string(b) + ") "
+            "for List of size (" + types::to_string(n) + ")"
+        ;
+
+        throw std::runtime_error(error);
+    }
+
+    List subset;
+    for (int i = a; i < b; i++) {
+        subset.append(at(i));
+    }
+
+    return subset;
 }
 
 template<class T> T &clarus::List<T>::at(int index) {
