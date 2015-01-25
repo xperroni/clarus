@@ -27,7 +27,22 @@ namespace fourier {
 
     cv::Mat convolve(const cv::Mat &data, const cv::Mat &kernel);
 
-    cv::Mat correlate(const cv::Mat &data, const cv::Mat &kernel);
+    /**
+    \brief Calculates a cross-correlation map between the two matrices.
+
+    To compute the cross-correlation, both inputs are normalized by subtracting the
+    average value from every cell, then dividing by the absolute maximum. Next the
+    Hadamard (point-wise) product of the Fourier transforms of the normalized matrices
+    is computed. Finally the inverse Fourier transform of the product is computed.
+
+    If <c>clip = true</c> (the default) the output matrix is truncated to dimensions
+    <c>(data.cols - kernel.cols, data.rows - kernel.rows)</c>, thus discarding correlation
+    values that rely on the kernel "going around" the data matrix.
+
+    The function requires that <c>(data.rows > kernel.rows && data.cols > kernel.cols)</c>
+    be true. Otherwise a <c>std::runtime_error</c> exception is thrown.
+    */
+    cv::Mat correlate(const cv::Mat &data, const cv::Mat &kernel, bool clip = true);
 
     cv::Mat tiles(const cv::Mat &data, int wf);
 

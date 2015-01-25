@@ -20,6 +20,8 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <clarus/vision/cvmat.hpp>
 #include <clarus/vision/fourier.hpp>
 
+#include <stdexcept>
+
 cv::Size fourier::fit(const cv::Size &size) {
     return cv::Size(
         cv::getOptimalDFTSize(size.width),
@@ -28,11 +30,18 @@ cv::Size fourier::fit(const cv::Size &size) {
 }
 
 cv::Mat fourier::convolve(const cv::Mat &data, const cv::Mat &kernel) {
+    if (data.rows < kernel.rows || data.cols < kernel.cols) {
+        throw std::runtime_error("Kernel must fit inside data matrix across all dimensions");
+    }
+
     cv::Size size = data.size();
     cv::Size optimal = fit(size);
+
+    cv::Mat fourier;
     cv::Mat data_f = transform(data, optimal);
     cv::Mat kernel_f = transform(kernel, optimal);
-    cv::Mat fourier = data_f.mul(-kernel_f);
+    cv::mulSpectrums(data_f, kernel_f, fourier, 0);
+
     return inverse(fourier, size);
 }
 
@@ -49,7 +58,11 @@ static cv::Mat normalize(const cv::Mat &data) {
     return averaged;
 }
 
-cv::Mat fourier::correlate(const cv::Mat &data, const cv::Mat &kernel) {
+cv::Mat fourier::correlate(const cv::Mat &data, const cv::Mat &kernel, bool clip) {
+    if (data.rows < kernel.rows || data.cols < kernel.cols) {
+        throw std::runtime_error("Kernel must fit inside data matrix across all dimensions");
+    }
+
     cv::Size size = data.size();
     cv::Size optimal = fit(size);
 
@@ -57,6 +70,11 @@ cv::Mat fourier::correlate(const cv::Mat &data, const cv::Mat &kernel) {
     cv::Mat data_f = transform(normalize(data), optimal);
     cv::Mat kernel_f = transform(normalize(kernel), optimal);
     cv::mulSpectrums(data_f, kernel_f, fourier, 0, true);
+
+    if (clip) {
+        size.width -= kernel.cols;
+        size.height -= kernel.rows;
+    }
 
     return inverse(fourier, size);
 }
