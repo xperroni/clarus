@@ -28,7 +28,18 @@ Under Bash-compatible environments, the scripts `build.sh` and `clean.sh` can be
 Version History
 ---------------
 
-**2014-01-12**
+**2015-01-26**
+
+Another small incremental update. The function `operator ()` has been implemented on `clarus::List`, enabling easy construction of subranges, for example:
+
+    List<int> p = (List<int>(), 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+    List<int> q = p(2, 5); // makes q = [2, 3, 4]
+
+Two changes have been made to the `fourier` functions. First, `fourier::correlate()` now includes a `clip` argument (set to `true` by default) which causes the last `(kernel.height)` rows and `(kernel.width)` columns of the cross-correlation map to be discarded before return. Therefore the only cross-correlation responses returned are those where the kernel was entirely "over" the data matrix. This is much more appropriate for when the cross-correlation map is being used to search for a small image (the kernel) over a larger one (the data matrix).
+
+Second, function `fourier::convolve()` had a bug in the element-wise multiplication step, which was fixed.
+
+**2015-01-12**
 
 A rather underwhelming update, mostly released to support other projects I'm working on and wanted to publish -- the visual processing library [Cight](https://github.com/xperroni/Cight) and its demo application [Dejavu](https://github.com/xperroni/Dejavu).
 
