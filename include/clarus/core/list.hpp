@@ -27,6 +27,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <algorithm>
 #include <cstddef>
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 
@@ -46,6 +47,10 @@ template<class T> class clarus::List {
     typedef std::vector<T> Buffer;
 
     boost::shared_ptr<Buffer> buffer;
+
+    inline int roll(int index) const {
+        return (index < 0 ? ((int) size()) + index : index);
+    }
 
 public:
     List();
@@ -83,9 +88,9 @@ public:
     const Buffer *operator -> () const;
 
     /**
-    \brief Returns a subset of this list, from index \c a up to <c>b - 1</c>.
+    \brief Returns a subset of this list, from index \c a up to <tt>b - 1</tt>.
 
-    Throws a <c>std::runtime_error</c> if the index range is illegal.
+    Throws a <tt>std::runtime_error</tt> if the index range is illegal.
     */
     List operator () (int a, int b) const;
 
@@ -149,11 +154,11 @@ template<class T> clarus::List<T> clarus::List<T>::operator , (const T &value) {
 }
 
 template<class T> T &clarus::List<T>::operator [] (int index) {
-    return (*buffer)[index];
+    return buffer->at(roll(index));
 }
 
 template<class T> const T &clarus::List<T>::operator [] (int index) const {
-    return (*buffer)[index];
+    return buffer->at(roll(index));
 }
 
 template<class T> bool clarus::List<T>::operator == (const List &that) const {
@@ -228,11 +233,11 @@ template<class T> clarus::List<T> clarus::List<T>::operator () (int a, int b) co
 }
 
 template<class T> T &clarus::List<T>::at(int index) {
-    return buffer->at(index);
+    return buffer->at(roll(index));
 }
 
 template<class T> const T &clarus::List<T>::at(int index) const {
-    return buffer->at(index);
+    return buffer->at(roll(index));
 }
 
 template<class T> T &clarus::List<T>::append(const T &value) {
@@ -276,6 +281,7 @@ template<class T> bool clarus::List<T>::empty() const {
 }
 
 template<class T> T clarus::List<T>::remove(int index) {
+    index = roll(index);
     if (index < 0 || index >= size()) {
         throw std::runtime_error("Invalid index: " + types::to_string(index));
     }
@@ -351,6 +357,24 @@ template<class T> std::ostream &operator << (std::ostream &out, const clarus::Li
     out << "]";
 
     return out;
+}
+
+template<class T> std::istream &operator >> (std::istream &in, clarus::List<T> &list) {
+    char sep = '\0';
+    in >> sep;
+    if (sep != '[') {
+        throw std::runtime_error("Error reading List from stream: separator character '[' not found");
+    }
+
+    for (;;) {
+        T &value = list.append();
+        in >> value;
+
+        in >> sep;
+        if (sep == ']') {
+            return in;
+        }
+    }
 }
 
 #endif
