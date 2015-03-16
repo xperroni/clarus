@@ -29,6 +29,19 @@ namespace images {
 
     cv::Mat convert(const cv::Mat &image, int type);
 
+    /**
+    \brief Returns the pixel-wise difference between two images.
+
+    Both images must have the same size and number of channels. If channel number is higher
+    than 1, difference is first computed channel-wise, then channel differences are
+    summed pixel-wise.
+
+    The type of the output matrix is defined by the \c type argument. Default is <tt>CV_32S</tt>.
+
+    If size or channel number differs between images, a <tt>std::runtime_error</tt> is thrown.
+    */
+    cv::Mat difference(const cv::Mat &a, const cv::Mat &b, int type = CV_32S);
+
     cv::Mat normalize(const cv::Mat &image);
 
     cv::Mat scale(const cv::Mat &image, const cv::Size &size, int interpolation = CV_INTER_LINEAR);

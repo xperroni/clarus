@@ -19,10 +19,16 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <clarus/vision/images.hpp>
 
+#include <clarus/core/list.hpp>
+using clarus::List;
+
 #include <clarus/vision/colors.hpp>
 #include <clarus/vision/filters.hpp>
 
+#include <boost/format.hpp>
+
 #include <iostream>
+#include <stdexcept>
 
 cv::Mat images::absdiff(const cv::Mat &a, const cv::Mat &b) {
     cv::Mat c;
@@ -34,6 +40,53 @@ cv::Mat images::convert(const cv::Mat &image, int type) {
     cv::Mat converted;
     image.convertTo(converted, type);
     return converted;
+}
+
+cv::Mat images::difference(const cv::Mat &a, const cv::Mat &b, int type) {
+    cv::Size size1 = a.size();
+    cv::Size size2 = b.size();
+    if (size1 != size2) {
+        throw std::runtime_error(
+            (boost::format("a.size() %1% != b.size() %2%") % size1 % size2).str()
+        );
+    }
+
+    int c1 = a.channels();
+    int c2 = b.channels();
+    if (c1 != c2) {
+        throw std::runtime_error(
+            (boost::format("a.channels() (%1%) != b.channels() (%2%)") % c1 % c2).str()
+        );
+    }
+
+    cv::Mat diff = images::absdiff(a, b);
+    if (c1 == 1) {
+        return (diff.type() != type ? images::convert(diff, type) : diff);
+    }
+
+    cv::Mat out(size1, type, cv::Scalar(0));
+    if (diff.type() == CV_8UC3 && type == CV_8U) {
+        uint8_t *v = (uint8_t*) out.data;
+        cv::Vec3b *u = (cv::Vec3b*) diff.data;
+        for (int i = 0, n = diff.rows * diff.cols; i < n; i++, u++, v++) {
+            *v = std::min((*u)[0] + (*u)[1] + (*u)[2], 255);
+        }
+    }
+    else if (diff.type() == CV_8UC3 && type == CV_32S) {
+        int *v = (int*) out.data;
+        cv::Vec3b *u = (cv::Vec3b*) diff.data;
+        for (int i = 0, n = diff.rows * diff.cols; i < n; i++, u++, v++) {
+            *v = (*u)[0] + (*u)[1] + (*u)[2];
+        }
+    }
+    else {
+        List<cv::Mat> channels = colors::channels(diff);
+        for (int i = 0, n = channels.size(); i < n; i++) {
+            cv::add(out, channels[i], out, cv::noArray(), type);
+        }
+    }
+
+    return out;
 }
 
 cv::Mat images::scale(const cv::Mat &image, const cv::Size &size, int interpolation) {
