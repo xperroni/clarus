@@ -22,7 +22,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <clarus/core/list.hpp>
 using clarus::List;
 
-#include <clarus/vision/filters.hpp>
+#include <clarus/vision/filters.hpp> // For CHANNEL_WISE macro
 
 List<cv::Mat> colors::BGRL(const cv::Mat &bgr) {
     List<cv::Mat> bgrl = channels(bgr);
