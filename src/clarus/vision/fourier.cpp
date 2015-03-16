@@ -72,8 +72,8 @@ cv::Mat fourier::correlate(const cv::Mat &data, const cv::Mat &kernel, bool clip
     cv::mulSpectrums(data_f, kernel_f, fourier, 0, true);
 
     if (clip) {
-        size.width -= kernel.cols;
-        size.height -= kernel.rows;
+        size.width = std::max(size.width - kernel.cols, 1);
+        size.height = std::max(size.height - kernel.rows, 1);
     }
 
     return inverse(fourier, size);
