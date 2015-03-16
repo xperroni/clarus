@@ -57,9 +57,23 @@ namespace clarus {
     */
     cv::Point argmin(const cv::Mat &data);
 
+    double min(const cv::Mat &data);
+
     double max(const cv::Mat &data);
 
-    double min(const cv::Mat &data);
+    /**
+    \brief Returns the average of all values in the given matrix.
+
+    If the matrix is multi-channel, the average across all channels is returned.
+    */
+    double mean(const cv::Mat &data);
+
+    /**
+    \brief Returns a double type (CV_64F) row vector of averages across the given dimension.
+
+    If the matrix is multi-channel, the average across all channels is returned.
+    */
+    cv::Mat mean(const cv::Mat &data, int dim);
 
     void shift(cv::Mat &data, int rows, int cols);
 
