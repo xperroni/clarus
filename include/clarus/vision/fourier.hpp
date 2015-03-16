@@ -35,12 +35,12 @@ namespace fourier {
     Hadamard (point-wise) product of the Fourier transforms of the normalized matrices
     is computed. Finally the inverse Fourier transform of the product is computed.
 
-    If <c>clip = true</c> (the default) the output matrix is truncated to dimensions
-    <c>(data.cols - kernel.cols, data.rows - kernel.rows)</c>, thus discarding correlation
+    If <tt>clip = true</tt> (the default) the output matrix is truncated to dimensions
+    <tt>(data.cols - kernel.cols, data.rows - kernel.rows)</tt>, thus discarding correlation
     values that rely on the kernel "going around" the data matrix.
 
-    The function requires that <c>(data.rows > kernel.rows && data.cols > kernel.cols)</c>
-    be true. Otherwise a <c>std::runtime_error</c> exception is thrown.
+    The function requires that <tt>(data.rows > kernel.rows && data.cols > kernel.cols)</tt>
+    be true. Otherwise a <tt>std::runtime_error</tt> exception is thrown.
     */
     cv::Mat correlate(const cv::Mat &data, const cv::Mat &kernel, bool clip = true);
 
