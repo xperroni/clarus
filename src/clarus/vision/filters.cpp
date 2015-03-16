@@ -302,6 +302,14 @@ List<cv::Mat> filter::laws(const cv::Mat &data, size_t w) {
     return output;
 }
 
+cv::Mat filter::masked(const cv::Mat &data, const cv::Mat &mask) {
+    static cv::Scalar ZERO(0, 0, 0, 0);
+
+    cv::Mat out(data.size(), data.type(), ZERO);
+    data.copyTo(out, mask);
+    return out;
+}
+
 cv::Mat filter::normalize(const cv::Mat &data, size_t w) {
     CHANNEL_WISE(normalize, data, w);
 
@@ -327,9 +335,10 @@ cv::Mat filter::normalize(const cv::Mat &data, size_t w) {
     return avg;
 }
 
-cv::Mat filter::otsu(cv::Mat image) {
-    cv::threshold(image, image, 0, 1, cv::THRESH_BINARY + cv::THRESH_OTSU);
-    return image;
+cv::Mat filter::otsu(const cv::Mat &image, int type) {
+    cv::Mat out(image.size(), CV_8U, cv::Scalar(0));
+    cv::threshold(image, out, 0, 1, type + cv::THRESH_OTSU);
+    return out;
 }
 
 List<cv::Mat> filter::prewitt(const cv::Mat &l) {

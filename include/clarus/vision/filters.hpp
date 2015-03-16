@@ -65,9 +65,18 @@ namespace filter {
 
     clarus::List<cv::Mat> laws(const cv::Mat &data, size_t w);
 
+    /**
+    \brief Applies the given mask to the given data matrix.
+
+    The output matrix is of the same size and type of the data matrix.
+    It's pixels are set either to zero if the corresponding mask pixel
+    is 0, or the corresponding data matrix value otherwise.
+    */
+    cv::Mat masked(const cv::Mat &data, const cv::Mat &mask);
+
     cv::Mat normalize(const cv::Mat &data, size_t w);
 
-    cv::Mat otsu(cv::Mat image);
+    cv::Mat otsu(const cv::Mat &image, int type = cv::THRESH_BINARY);
 
     clarus::List<cv::Mat> prewitt(const cv::Mat &l);
 
