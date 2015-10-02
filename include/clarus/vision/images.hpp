@@ -42,9 +42,21 @@ namespace images {
     */
     cv::Mat difference(const cv::Mat &a, const cv::Mat &b, int type = CV_32S);
 
+    /**
+     * \brief Compute the integral transform of the given image.
+     */
+    cv::Mat integral(const cv::Mat &image);
+
+    /**
+     * \brief Compute the sum of an image over a given area, given its integral image.
+     */
+    double sum(const cv::Mat &integral, const cv::Rect &area);
+
     cv::Mat normalize(const cv::Mat &image);
 
     cv::Mat scale(const cv::Mat &image, const cv::Size &size, int interpolation = CV_INTER_LINEAR);
+
+    cv::Mat scale(const cv::Mat &image, int width, int interpolation = CV_INTER_LINEAR);
 
     cv::Mat load(const std::string &path);
 
