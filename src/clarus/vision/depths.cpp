@@ -101,13 +101,18 @@ void depths::save(const cv::Mat &depths, std::ostream &out) {
     }
 }
 
-cv::Mat depths::bgr(const cv::Mat &depths, const cv::Size &scale) {
-    cv::Mat grays = depths.clone();
-    grays += 1;
-    cv::log(grays, grays);
-    cv::normalize(grays, grays, 0, 255, CV_MINMAX);
+cv::Mat depths::bgr(const cv::Mat &depths) {
+    cv::Mat grays;
+    depths.convertTo(grays, CV_64F);
+    grays += 1.0;
 
-    cv::Mat colored = colors::colormap(images::convert(grays, CV_8U), cv::COLORMAP_JET);
+    cv::log(grays, grays);
+    cv::normalize(grays, grays, 0, 255, CV_MINMAX, CV_8U);
+    return colors::colormap(grays, cv::COLORMAP_JET);
+}
+
+cv::Mat depths::bgr(const cv::Mat &depths, const cv::Size &scale) {
+    cv::Mat colored = bgr(depths);
     if (scale.width > 0 && scale.height > 0) {
         colored = images::scale(colored, scale, cv::INTER_NEAREST);
     }

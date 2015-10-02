@@ -34,7 +34,9 @@ namespace depths {
 
     void save(const cv::Mat &depths, std::ostream &out);
 
-    cv::Mat bgr(const cv::Mat &depths, const cv::Size &scale = cv::Size(0, 0));
+    cv::Mat bgr(const cv::Mat &depths);
+
+    cv::Mat bgr(const cv::Mat &depths, const cv::Size &scale);
 }
 
 #endif
