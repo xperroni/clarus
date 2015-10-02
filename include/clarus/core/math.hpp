@@ -26,58 +26,89 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <opencv2/opencv.hpp>
 
-namespace clarus {
-    typedef boost::function<double(double, double)> BinaryOp;
+namespace clarus
+{
 
-    typedef boost::function<double(double)> UnaryOp;
+typedef boost::function<double(double, double)> BinaryOp;
 
-    List<double> vectorize(BinaryOp op, const List<double> &a, const List<double> &b);
+typedef boost::function<double(double)> UnaryOp;
 
-    List<double> vectorize(UnaryOp op, const List<double> &a);
+List<double> vectorize(BinaryOp op, const List<double> &a, const List<double> &b);
 
-    double add(double a, double b);
+List<double> vectorize(UnaryOp op, const List<double> &a);
 
-    double sub(double a, double b);
+cv::Mat vectorize(BinaryOp op, const cv::Mat &a, const cv::Mat &b);
 
-    double mul(double a, double b);
+cv::Mat vectorize(UnaryOp op, const cv::Mat &a);
 
-    double div(double a, double b);
+double add(double a, double b);
 
-    double log(double x, double base);
+double sub(double a, double b);
 
-    double log2(double x);
+double mul(double a, double b);
 
-    /**
-    \brief Returns the 2D coordinates of the highest value in the given matrix.
-    */
-    cv::Point argmax(const cv::Mat &data);
+double div(double a, double b);
 
-    /**
-    \brief Returns the 2D coordinates of the lowest value in the given matrix.
-    */
-    cv::Point argmin(const cv::Mat &data);
+double log(double x, double base);
 
-    double min(const cv::Mat &data);
+double log2(double x);
 
-    double max(const cv::Mat &data);
+cv::Mat cos(const cv::Mat &values);
 
-    /**
-    \brief Returns the average of all values in the given matrix.
+cv::Mat sin(const cv::Mat &values);
 
-    If the matrix is multi-channel, the average across all channels is returned.
-    */
-    double mean(const cv::Mat &data);
+/**
+ * \brief Computes the element-wise exponential function for the given matrix.
+ */
+cv::Mat exp(const cv::Mat &data);
 
-    /**
-    \brief Returns a double type (CV_64F) row vector of averages across the given dimension.
+/**
+ * \brief Computes the element-wise complex exponential for the given complex matrix.
+ *
+ * The complex matrix is given as a pair of single-channel matrices: one for the real part, the other for the imaginary
+ * part.
+ *
+ * The returned matrix contains tow channels, for the real and imaginary parts of values respectively.
+ */
+cv::Mat exp(const cv::Mat &real, const cv::Mat &img);
 
-    If the matrix is multi-channel, the average across all channels is returned.
-    */
-    cv::Mat mean(const cv::Mat &data, int dim);
+/**
+ * \brief Returns the element-wise natural log of the given matrix.
+ */
+cv::Mat log(const cv::Mat &data);
 
-    void shift(cv::Mat &data, int rows, int cols);
+/**
+\brief Returns the 2D coordinates of the highest value in the given matrix.
+*/
+cv::Point argmax(const cv::Mat &data);
 
-    cv::Mat pow(const cv::Mat &data, double power);
-}
+/**
+\brief Returns the 2D coordinates of the lowest value in the given matrix.
+*/
+cv::Point argmin(const cv::Mat &data);
+
+double min(const cv::Mat &data);
+
+double max(const cv::Mat &data);
+
+/**
+\brief Returns the average of all values in the given matrix.
+
+If the matrix is multi-channel, the average across all channels is returned.
+*/
+double mean(const cv::Mat &data);
+
+/**
+\brief Returns a double type (CV_64F) row vector of averages across the given dimension.
+
+If the matrix is multi-channel, the average across all channels is returned.
+*/
+cv::Mat mean(const cv::Mat &data, int dim);
+
+void shift(cv::Mat &data, int rows, int cols);
+
+cv::Mat pow(const cv::Mat &data, double power);
+
+} // namespace clarus
 
 #endif

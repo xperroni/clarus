@@ -18,22 +18,27 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <clarus/core/bag.hpp>
-using clarus::Bag;
-using std::string;
 
-Bag::Bag() {
-    // Nothing to do.
+namespace clarus
+{
+
+Bag::Bag()
+{
+  // Nothing to do.
 }
 
-Bag::~Bag() {
-    // Nothing to do.
+Bag::~Bag()
+{
+  // Nothing to do.
 }
 
-bool Bag::has(const string &name) const {
-    if (entries.count(name) == 0) {
-        return false;
-    }
+bool Bag::has(const std::string &name) const
+{
+  if (entries.count(name) == 0)
+      return false;
 
-    const Entry::P &entry = entries.find(name)->second;
-    return (entry.get() != NULL);
+  const Entry::P &entry = entries.find(name)->second;
+  return (entry.get() != NULL);
 }
+
+} // namespace clarus

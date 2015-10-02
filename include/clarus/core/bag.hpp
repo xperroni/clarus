@@ -26,9 +26,8 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <stdexcept>
 #include <string>
 
-namespace clarus {
-    class Bag;
-}
+namespace clarus
+{
 
 /**
 \brief An heterogeneous container.
@@ -40,177 +39,190 @@ the collection; the user is required to remember which type is associated to eac
 string key and use the proper template parameters when retrieving stored values,
 though.
 */
-class clarus::Bag {
-    /**
-    \brief Abstract base class for structures that encapsulate stored values.
-    */
-    struct Entry {
-        /** \brief Reference-counted pointer type alias. */
-        typedef boost::shared_ptr<Entry> P;
-
-        /**
-        \brief Virtual destructor. Enforces polymorphism. Do not remove.
-        */
-        virtual ~Entry() {
-            // Do nothing.
-        }
-
-        /**
-        \brief Returns a void pointer to the value encapsulated in this entry.
-        */
-        virtual const void *get() const = 0;
-    };
-
-    /**
-    \brief Template structure for encapsulating stored values of arbitrary type.
-    */
-    template<class T> struct Record: public Entry {
-        /** \brief Reference-counted pointer to stored value. */
-        boost::shared_ptr<T> value;
-
-        /**
-        \brief Encapsulates the given pointer.
-
-        The pointer is stored as a reference-counted smart pointer. When the reference
-        count goes down to zero, the pointed object is deleted.
-        */
-        Record(T *pointer)
-        {
-            value.reset(pointer);
-        }
-
-        /**
-        \brief Encapsulates the given smart pointer.
-
-        A new smart pointer to the given object is created and stored inside this object.
-        */
-        Record(boost::shared_ptr<T> _value):
-            value(_value)
-        {
-            // Nothing to do.
-        }
-
-        // See Entry::get()
-        virtual const void *get() const {
-            return value.get();
-        }
-    };
-
-    /** \brief Map of string-indexed stored values. */
-    std::map<std::string, Entry::P> entries;
-
-public:
-    /**
-    \brief Default constructor.
-    */
-    Bag();
+class Bag
+{
+  /**
+  \brief Abstract base class for structures that encapsulate stored values.
+  */
+  struct Entry
+  {
+    /** \brief Reference-counted pointer type alias. */
+    typedef boost::shared_ptr<Entry> P;
 
     /**
     \brief Virtual destructor. Enforces polymorphism. Do not remove.
     */
-    virtual ~Bag();
-
-    /**
-    \brief Returns a reference to the value stored by the given name.
-
-    If the name is not known, throws an exception.
-
-    Be aware that this method is not thread-safe. If the record is overwritten or deleted
-    by another thread, the reference returned by this method will become invalid, likely
-    resulting in an application crash.
-    */
-    template<class T> T &fetch(const std::string &name);
-
-    /**
-    \brief Returns a reference to the value stored by the given name.
-
-    If the name is not known, associate it to the fall-back value, then return it.
-
-    Be aware that this method is not thread-safe. If the record is overwritten or deleted
-    by another thread, the reference returned by this method will become invalid, likely
-    resulting in an application crash.
-    */
-    template<class T> T &fetch(const std::string &name, const T &fallback);
-
-    /**
-    \brief Returns whether a value indexed by the given name is stored at this collection.
-    */
-    bool has(const std::string &name) const;
-
-    /**
-    \brief Returns a shared pointer to the vale indexed by the given name.
-
-    If no value indexed by the given name is found, a runtime error is thrown.
-    */
-    template<class T> boost::shared_ptr<T> get(const std::string &name);
-
-    /**
-    \brief Returns a shared pointer to the vale indexed by the given name. If no value
-    indexed by the given name is found, the given fall back value is stored and a smart
-    pointer to it is returned.
-    */
-    template<class T> boost::shared_ptr<T> get(const std::string &name, const T &fallback);
-
-    /**
-    \brief Stores a copy of the given value, indexing it by the given name.
-
-    If there was already a stored value indexed by the given name, it is discarded.
-    */
-    template<class T> boost::shared_ptr<T> set(const std::string &name, const T &value);
-
-    /**
-    \brief Stores the given value pointer, indexing it by the given name.
-
-    If there was already a stored value indexed by the given name, it is discarded.
-    The given pointer is stored as a reference-counted smart pointer, which means the
-    pointed object will be deleted once the reference count goes to zero (e.g. if the
-    value is overwritten, or this bag is deleted).
-    */
-    template<class T> boost::shared_ptr<T> set(const std::string &name, T *value);
-
-    /**
-    \brief Stores the given smart pointer, indexing it by the given name.
-
-    If there was already a stored value indexed by the given name, it is discarded.
-    */
-    template<class T> boost::shared_ptr<T> set(const std::string &name, boost::shared_ptr<T> value);
-};
-
-template<class T> T &clarus::Bag::fetch(const std::string &name) {
-    return *(get<T>(name));
-}
-
-template<class T> T &clarus::Bag::fetch(const std::string &name, const T &fallback) {
-    return *(get<T>(name, fallback));
-}
-
-template<class T> boost::shared_ptr<T> clarus::Bag::get(const std::string &name) {
-    Record<T> *record = dynamic_cast<Record<T>*>(entries[name].get());
-    if (record == NULL) {
-        throw std::runtime_error(std::string("Record \"") + name + "\" not found");
+    virtual ~Entry()
+    {
+      // Do nothing.
     }
 
-    return record->value;
+    /**
+    \brief Returns a void pointer to the value encapsulated in this entry.
+    */
+    virtual const void *get() const = 0;
+  };
+
+  /**
+  \brief Template structure for encapsulating stored values of arbitrary type.
+  */
+  template<class T> struct Record: public Entry
+  {
+    /** \brief Reference-counted pointer to stored value. */
+    boost::shared_ptr<T> value;
+
+    /**
+    \brief Encapsulates the given pointer.
+
+    The pointer is stored as a reference-counted smart pointer. When the reference
+    count goes down to zero, the pointed object is deleted.
+    */
+    Record(T *pointer)
+    {
+      value.reset(pointer);
+    }
+
+    /**
+    \brief Encapsulates the given smart pointer.
+
+    A new smart pointer to the given object is created and stored inside this object.
+    */
+    Record(boost::shared_ptr<T> _value):
+      value(_value)
+    {
+      // Nothing to do.
+    }
+
+    // See Entry::get()
+    virtual const void *get() const
+    {
+      return value.get();
+    }
+  };
+
+  /** \brief Map of string-indexed stored values. */
+  std::map<std::string, Entry::P> entries;
+
+public:
+  /**
+  \brief Default constructor.
+  */
+  Bag();
+
+  /**
+  \brief Virtual destructor. Enforces polymorphism. Do not remove.
+  */
+  virtual ~Bag();
+
+  /**
+  \brief Returns a reference to the value stored by the given name.
+
+  If the name is not known, throws an exception.
+
+  Be aware that this method is not thread-safe. If the record is overwritten or deleted
+  by another thread, the reference returned by this method will become invalid, likely
+  resulting in an application crash.
+  */
+  template<class T> T &peek(const std::string &name);
+
+  /**
+  \brief Returns a reference to the value stored by the given name.
+
+  If the name is not known, associate it to the fall-back value, then return it.
+
+  Be aware that this method is not thread-safe. If the record is overwritten or deleted
+  by another thread, the reference returned by this method will become invalid, likely
+  resulting in an application crash.
+  */
+  template<class T> T &peek(const std::string &name, const T &fallback);
+
+  /**
+  \brief Returns whether a value indexed by the given name is stored at this collection.
+  */
+  bool has(const std::string &name) const;
+
+  /**
+  \brief Returns a shared pointer to the vale indexed by the given name.
+
+  If no value indexed by the given name is found, a runtime error is thrown.
+  */
+  template<class T> boost::shared_ptr<T> get(const std::string &name);
+
+  /**
+  \brief Returns a shared pointer to the vale indexed by the given name. If no value
+  indexed by the given name is found, the given fall back value is stored and a smart
+  pointer to it is returned.
+  */
+  template<class T> boost::shared_ptr<T> get(const std::string &name, const T &fallback);
+
+  /**
+  \brief Stores a copy of the given value, indexing it by the given name.
+
+  If there was already a stored value indexed by the given name, it is discarded.
+  */
+  template<class T> boost::shared_ptr<T> set(const std::string &name, const T &value);
+
+  /**
+  \brief Stores the given value pointer, indexing it by the given name.
+
+  If there was already a stored value indexed by the given name, it is discarded.
+  The given pointer is stored as a reference-counted smart pointer, which means the
+  pointed object will be deleted once the reference count goes to zero (e.g. if the
+  value is overwritten, or this bag is deleted).
+  */
+  template<class T> boost::shared_ptr<T> set(const std::string &name, T *value);
+
+  /**
+  \brief Stores the given smart pointer, indexing it by the given name.
+
+  If there was already a stored value indexed by the given name, it is discarded.
+  */
+  template<class T> boost::shared_ptr<T> set(const std::string &name, boost::shared_ptr<T> value);
+};
+
+template<class T> T &Bag::peek(const std::string &name)
+{
+  return *(get<T>(name));
 }
 
-template<class T> boost::shared_ptr<T> clarus::Bag::get(const std::string &name, const T &fallback) {
-    return (has(name) ? get<T>(name) : set<T>(name, fallback));
+template<class T> T &Bag::peek(const std::string &name, const T &fallback)
+{
+  return *(get<T>(name, fallback));
 }
 
-template<class T> boost::shared_ptr<T> clarus::Bag::set(const std::string &name, const T &value) {
-    return set<T>(name, new T(value));
+template<class T> boost::shared_ptr<T> Bag::get(const std::string &name)
+{
+  Record<T> *record = dynamic_cast<Record<T>*>(entries[name].get());
+  if (record == NULL)
+    throw std::runtime_error(std::string("Record \"") + name + "\" not found");
+
+  return record->value;
 }
 
-template<class T> boost::shared_ptr<T> clarus::Bag::set(const std::string &name, T *value) {
-    Record<T> *record = new Record<T>(value);
-    entries[name].reset(record);
-    return record->value;
+template<class T> boost::shared_ptr<T> Bag::get(const std::string &name, const T &fallback)
+{
+  return (has(name) ? get<T>(name) : set<T>(name, fallback));
 }
 
-template<class T> boost::shared_ptr<T> clarus::Bag::set(const std::string &name, boost::shared_ptr<T> value) {
-    Record<T> *record = new Record<T>(value);
-    entries[name].reset(record);
-    return record->value;
+template<class T> boost::shared_ptr<T> Bag::set(const std::string &name, const T &value)
+{
+  return set<T>(name, new T(value));
 }
+
+template<class T> boost::shared_ptr<T> Bag::set(const std::string &name, T *value)
+{
+  Record<T> *record = new Record<T>(value);
+  entries[name].reset(record);
+  return record->value;
+}
+
+template<class T> boost::shared_ptr<T> Bag::set(const std::string &name, boost::shared_ptr<T> value)
+{
+  Record<T> *record = new Record<T>(value);
+  entries[name].reset(record);
+  return record->value;
+}
+
+} // namespace clarus
 
 #endif
