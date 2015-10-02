@@ -55,7 +55,9 @@ template<class T> class clarus::List {
 public:
     List();
 
-    List(size_t length, const T &value = T());
+    List(size_t length);
+
+    List(size_t length, const T &value);
 
     List(const Buffer &that);
 
@@ -127,9 +129,17 @@ public:
 #include <clarus/core/list_iterator_const.hpp>
 
 template<class T> clarus::List<T>::List():
-    buffer(new Buffer())
+  buffer(new Buffer())
 {
     // Nothing to do.
+}
+
+template<class T> clarus::List<T>::List(size_t length):
+  buffer(new Buffer())
+{
+  buffer->reserve(length);
+  for (int i = 0; i < length; i++)
+    append();
 }
 
 template<class T> clarus::List<T>::List(size_t length, const T &value):
@@ -214,7 +224,7 @@ template<class T> const typename clarus::List<T>::Buffer *clarus::List<T>::opera
 
 template<class T> clarus::List<T> clarus::List<T>::operator () (int a, int b) const {
     int n = size();
-    if (0 > a || a >= b || b >= n) {
+    if (a >= b || (b - a - 1) >= n) {
         std::string error =
             std::string("Illegal range ") +
             "(" + types::to_string(a) + ", " + types::to_string(b) + ") "
