@@ -51,7 +51,7 @@ namespace colors {
 
     \return RGB color-mapped version of the gray-scale input.
     */
-    cv::Mat colormap(const cv::Mat &image, int cm);
+    cv::Mat colormap(const cv::Mat &image, int cm = cv::COLORMAP_JET);
 
     /**
     \brief Converts the given image to the given color space.
