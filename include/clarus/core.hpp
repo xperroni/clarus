@@ -28,6 +28,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <clarus/core/loop.hpp>
 #include <clarus/core/looper.hpp>
 #include <clarus/core/math.hpp>
+#include <clarus/core/matrix.hpp>
 #include <clarus/core/tuple.hpp>
 #include <clarus/core/types.hpp>
 
