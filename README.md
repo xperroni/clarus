@@ -28,6 +28,10 @@ Under Bash-compatible environments, the scripts `build.sh` and `clean.sh` can be
 Version History
 ---------------
 
+**2015-??-??**
+
+As 
+
 **2015-03-16**
 
 The methods in `clarus::List` that deal with indices (`operator []`, `at()`, `remove()`) have been changed to recognize negative index values as relative to the end of the list, e.g.:
@@ -37,11 +41,11 @@ The methods in `clarus::List` that deal with indices (`operator []`, `at()`, `re
 
 Moreover, the implementation of `operator []` has been changed to use the `at()` method of the underlying vector object, rather than its own `operator []` implementation. After one too many segmentation fault errors due to off-by-one bugs I decided whatever performance losses will be more than made up in debug time.
 
-The stream input stream operator `>>` was implemented for `clarus::List` objects. Lists are expected to be encoded in plain text, delimited by square braces and contain elements that have themselves an input stream operator implementation, e.g. `[1, 2, 3]`.
+The stream input operator `>>` was implemented for `clarus::List` objects. Lists are expected to be encoded in plain text, delimited by square braces and contain elements that have themselves an input stream operator implementation, e.g. `[1, 2, 3]`.
 
 Two new methods have been added to the `clarus/core/math.hpp` module -- more specifically, two versions of `clarus::mean()`, one to perform matrix-wide average, the other to work across a given dimension. Both treat multi-channel matrices by first performing a pixel-wise sum.
 
-A `filter::masked()` function was added to the `vision/filters` module, making possible to selectively zero out pixels in an input image according to a given mask matrix. The implementation of the `filter::otsu()` function was also changing, adding an optional argument for specifying a threshold type other than the default `cv::THRESH_BINARY`.
+A `filter::masked()` function was added to the `vision/filters` module, making possible to selectively zero out pixels in an input image according to a given mask matrix. The implementation of the `filter::otsu()` function has also changed, with an optional argument added for specifying a threshold type other than the default `cv::THRESH_BINARY`.
 
 Finally, a `difference()` function was added to the `vision/images` module, that makes possible to compute the pixel-by-pixel difference between images, both single- and multi-channel.
 
