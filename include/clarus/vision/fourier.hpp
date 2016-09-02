@@ -54,7 +54,13 @@ cv::Mat normalize(const cv::Mat &data);
 
 cv::Mat tiles(const cv::Mat &data, int wf);
 
-cv::Mat transform(const cv::Mat &data, int flags = 0, const cv::Size &optimal = cv::Size(0, 0));
+cv::Mat transform(const cv::Mat &data);
+
+cv::Mat transform(const cv::Mat &data, int flags);
+
+cv::Mat transform(const cv::Mat &data, const cv::Size &size);
+
+cv::Mat transform(const cv::Mat &data, int flags, const cv::Size &size);
 
 cv::Mat inverse(const cv::Mat &fourier, const cv::Size &optimal = cv::Size(0, 0));
 

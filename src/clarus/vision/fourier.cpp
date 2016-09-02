@@ -133,15 +133,27 @@ cv::Mat fourier::tiles(const cv::Mat &data, int wf)
   return out;
 }
 
-cv::Mat fourier::transform(const cv::Mat &data, int flags, const cv::Size &optimal)
+cv::Mat fourier::transform(const cv::Mat &data)
 {
-  cv::Size size = optimal;
-  if (size.width == 0 || size.height == 0)
-    size = fit(data.size());
+  return transform(data, 0, data.size());
+}
 
+cv::Mat fourier::transform(const cv::Mat &data, int flags)
+{
+  return transform(data, flags, data.size());
+}
+
+cv::Mat fourier::transform(const cv::Mat &data, const cv::Size &size)
+{
+  return transform(data, 0, size);
+}
+
+cv::Mat fourier::transform(const cv::Mat &data, int flags, const cv::Size &size)
+{
   cv::Mat padded;
-  int m = size.height - data.rows;
-  int n = size.width - data.cols;
+  cv::Size fitted = fit(size);
+  int m = fitted.height - data.rows;
+  int n = fitted.width - data.cols;
   cv::copyMakeBorder(data, padded, 0, m, 0, n, cv::BORDER_CONSTANT, cv::Scalar::all(0));
 
   cv::Mat fourier;
