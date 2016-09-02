@@ -407,23 +407,34 @@ cv::Mat filter::sobel(const cv::Mat &image) {
     List<cv::Mat> channels;
     cv::split(image, *channels);
 
-    cv::Mat result = cv::Mat::zeros(image.size(), CV_8U);
+    cv::Mat result = cv::Mat::zeros(image.size(), CV_64F);
     for (ListIterator<cv::Mat> i(channels); i.more();) {
         const cv::Mat &l = i.next();
         cv::Mat g, x, y, e;
 
         // Gradient X
-        cv::Sobel(l, g, CV_16S, 1, 0, 3, 1, 0, cv::BORDER_DEFAULT);
-        cv::convertScaleAbs(g, x);
+        cv::Sobel(l, x, CV_64F, 1, 0, 3, 1, 0, cv::BORDER_DEFAULT);
+        //cv::convertScaleAbs(g, x);
 
         // Gradient Y
-        cv::Sobel(l, g, CV_16S, 0, 1, 3, 1, 0, cv::BORDER_DEFAULT);
-        cv::convertScaleAbs(g, y);
+        cv::Sobel(l, y, CV_64F, 0, 1, 3, 1, 0, cv::BORDER_DEFAULT);
+        //cv::convertScaleAbs(g, y);
+
+        cv::Mat x_2, y_2, g_2;
+
+        cv::pow(x, 2.0, x_2);
+        cv::pow(y, 2.0, y_2);
+        g_2 = x_2 + y_2;
+        cv::pow(g_2, 0.5, g);
+
+        result += g;
+
+        //result += 0.5 * x + 0.5 * y;
 
         // Total Gradient (approximate)
-        cv::addWeighted(x, 0.5, y, 0.5, 0, g);
-        cv::convertScaleAbs(g, e);
-        e.copyTo(result, e);
+//         cv::addWeighted(x, 0.5, y, 0.5, 0, g);
+//         cv::convertScaleAbs(g, e);
+//         e.copyTo(result, e);
     }
 
     return result;
