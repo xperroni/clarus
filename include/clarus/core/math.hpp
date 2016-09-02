@@ -33,6 +33,12 @@ typedef boost::function<double(double, double)> BinaryOp;
 
 typedef boost::function<double(double)> UnaryOp;
 
+/** \brief Convenience OpenCV Scalar constant. */
+extern const cv::Scalar ZERO;
+
+/** \brief Convenience OpenCV Scalar constant. */
+extern const cv::Scalar ONE;
+
 List<double> vectorize(BinaryOp op, const List<double> &a, const List<double> &b);
 
 List<double> vectorize(UnaryOp op, const List<double> &a);
@@ -78,13 +84,13 @@ cv::Mat exp(const cv::Mat &real, const cv::Mat &img);
 cv::Mat log(const cv::Mat &data);
 
 /**
-\brief Returns the 2D coordinates of the highest value in the given matrix.
-*/
+ * \brief Returns the 2D coordinates of the highest value in the given matrix.
+ */
 cv::Point argmax(const cv::Mat &data);
 
 /**
-\brief Returns the 2D coordinates of the lowest value in the given matrix.
-*/
+ * \brief Returns the 2D coordinates of the lowest value in the given matrix.
+ */
 cv::Point argmin(const cv::Mat &data);
 
 double min(const cv::Mat &data);
@@ -92,22 +98,50 @@ double min(const cv::Mat &data);
 double max(const cv::Mat &data);
 
 /**
-\brief Returns the average of all values in the given matrix.
+ * \brief Return the magnitude of the given matrix.
+ *
+ * If the matrix is multi-channel, the sum across all channels is returned.
+ */
+double magnitude(const cv::Mat &data);
 
-If the matrix is multi-channel, the average across all channels is returned.
-*/
+/**
+ * \brief Returns the average of all values in the given matrix.
+ *
+ * If the matrix is multi-channel, the average across all channels is returned.
+ */
 double mean(const cv::Mat &data);
 
 /**
-\brief Returns a double type (CV_64F) row vector of averages across the given dimension.
-
-If the matrix is multi-channel, the average across all channels is returned.
-*/
+ * \brief Returns a double type (CV_64F) row vector of averages across the given dimension.
+ *
+ * If the matrix is multi-channel, the average across all channels is returned.
+ */
 cv::Mat mean(const cv::Mat &data, int dim);
 
 void shift(cv::Mat &data, int rows, int cols);
 
 cv::Mat pow(const cv::Mat &data, double power);
+
+inline double pow(double x, double n)
+{
+  return ::pow(x, n);
+}
+
+cv::Mat sqrt(const cv::Mat &data);
+
+inline double sqrt(double x)
+{
+  return ::sqrt(x);
+}
+
+/**
+ * \brief Truncate \c value to the range [\c lower, \c upper].
+ */
+template<class T>
+inline T truncate(T value, T lower, T upper)
+{
+  return std::min(std::max(value, lower), upper);
+}
 
 } // namespace clarus
 

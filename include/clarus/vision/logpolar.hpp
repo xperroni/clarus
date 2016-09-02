@@ -77,7 +77,7 @@ template<class T> cv::Mat logpolar::transform(const cv::Mat &image, int i_0, int
     // dimension.
     int i_c = std::max(i_0, i_n - i_0);
     int j_c = std::max(j_0, j_n - j_0);
-    double d_c = sqrt(pow(i_c, 2) + pow(j_c, 2));
+    double d_c = ::sqrt(pow(i_c, 2) + pow(j_c, 2));
 
     if (p_n == -1) {
         // The default value to p_n is defined as the distance d_c.

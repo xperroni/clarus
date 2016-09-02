@@ -27,6 +27,10 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 namespace clarus
 {
 
+const cv::Scalar ZERO = cv::Scalar::all(0);
+
+const cv::Scalar ONE = cv::Scalar::all(1);
+
 List<double> vectorize(BinaryOp op, const List<double> &a, const List<double> &b)
 {
   List<double> c;
@@ -176,6 +180,11 @@ double max(const cv::Mat &data)
   return maxVal;
 }
 
+double magnitude(const cv::Mat &data)
+{
+  return ::sqrt(cv::sum(data.mul(data))[0]);
+}
+
 double mean(const cv::Mat &data)
 {
   cv::Scalar means = cv::mean(data);
@@ -228,6 +237,13 @@ cv::Mat pow(const cv::Mat &data, double power)
 {
   cv::Mat out;
   cv::pow(data, power, out);
+  return out;
+}
+
+cv::Mat sqrt(const cv::Mat &data)
+{
+  cv::Mat out;
+  cv::sqrt(data, out);
   return out;
 }
 

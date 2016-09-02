@@ -100,7 +100,7 @@ double clarus::distance(const Line2D &line, const Point &point) {
     double x = point[0];
     double y = point[1];
 
-    return (isnan(a) ? fabs(x - b) : fabs(y - a * x - b) / sqrt(::pow(a, 2.0) + 1));
+    return (isnan(a) ? fabs(x - b) : fabs(y - a * x - b) / ::sqrt(::pow(a, 2.0) + 1));
 }
 
 double clarus::distance(const Line2D &l0, const Line2D &l1) {

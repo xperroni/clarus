@@ -207,7 +207,7 @@ template<class T, size_t n> double Tuple<T, n>::distance(const Tuple &other) con
         d += pow(a - b, 2.0);
     }
 
-    return sqrt(d);
+    return ::sqrt(d);
 }
 
 #endif
