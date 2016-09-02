@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CLARUS_HPP
-#define CLARUS_HPP
+#ifndef CLARUS_FFTW_HPP
+#define CLARUS_FFTW_HPP
 
-#include <clarus/core.hpp>
-#include <clarus/fftw.hpp>
-#include <clarus/io.hpp>
-#include <clarus/model.hpp>
-#include <clarus/vgram.hpp>
-#include <clarus/vision.hpp>
+#include <clarus/fftw/buffer.hpp>
+#include <clarus/fftw/correlate.hpp>
+#include <clarus/fftw/cosine_search.hpp>
+#include <clarus/fftw/plan.hpp>
+#include <clarus/fftw/signal.hpp>
+#include <clarus/fftw/signals.hpp>
 
 #endif
