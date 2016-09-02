@@ -21,6 +21,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #define CLARUS_CORE_HPP
 
 #include <clarus/core/bag.hpp>
+#include <clarus/core/bucket_sort.hpp>
 #include <clarus/core/context.hpp>
 #include <clarus/core/index.hpp>
 #include <clarus/core/list.hpp>
