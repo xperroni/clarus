@@ -28,6 +28,7 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <clarus/vision/fourier.hpp>
 #include <clarus/vision/gaussian.hpp>
 #include <clarus/vision/images.hpp>
+#include <clarus/vision/integral.hpp>
 #include <clarus/vision/kernel.hpp>
 #include <clarus/vision/logpolar.hpp>
 #include <clarus/vision/minchinton.hpp>
