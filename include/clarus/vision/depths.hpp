@@ -36,6 +36,10 @@ namespace depths {
 
     cv::Mat bgr(const cv::Mat &depths);
 
+    cv::Mat bgr(int color_map, const cv::Mat &depths);
+
+    cv::Mat bgr(const cv::Mat &depths, int width);
+
     cv::Mat bgr(const cv::Mat &depths, const cv::Size &scale);
 }
 
