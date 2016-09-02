@@ -23,6 +23,33 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 #include <sstream>
 #include <string>
 
+namespace clarus
+{
+  template<class T> void eval(T &value, const std::string &str)
+  {
+      std::istringstream stream(str);
+      stream >> value;
+  }
+
+  template<> void eval(bool &value, const std::string &str);
+
+  template<class T> T eval(const std::string &str)
+  {
+      T value;
+      eval(value, str);
+      return value;
+  }
+
+  template<class T> std::string str(const T &value)
+  {
+      std::ostringstream stream;
+      stream << value;
+      return stream.str();
+  }
+
+  template<> std::string str(const bool &value);
+}
+
 namespace types {
     template<class T> void from_string(T &value, const std::string &str) {
         std::istringstream stream(str);

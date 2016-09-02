@@ -19,6 +19,21 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <clarus/core/types.hpp>
 
+namespace clarus
+{
+
+template<> void eval(bool &value, const std::string &str)
+{
+  value = (str == "true");
+}
+
+template<> std::string str(const bool &value)
+{
+  return (value ? "true" : "false");
+}
+
+} // namespace clarus
+
 template<> void types::from_string(bool &value, const std::string &str) {
     value = (str == "true");
 }
