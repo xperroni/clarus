@@ -1,10 +1,11 @@
 Clarus
 ======
 
-Clarus is a library for machine learning, geared towards computer vision problems. It is developed in C++ 03 on top of [boost](http://www.boost.org/) and [OpenCV](http://opencv.org/). It is divided in several modules:
+Clarus is a library for machine learning, geared towards computer vision problems. It is developed in C++ 03 on top of [boost](http://www.boost.org/), [OpenCV](http://opencv.org/) and [FFTW](http://fftw.org/). It is divided in several modules:
 
 * `core`: multi-threading facilities, the `Bag` heterogeneous collection, and some other conveniences;
 * `io`: facilities for interfacing with sensors (such as cameras) and displaying data;
+* `fftw`: API for using FFTW fourier transforms on OpenCV matrixes;
 * `model`: classes and algorithms dealing with high-level (usually geometric) models and concepts;
 * `vgram`: an API for working with [VG-RAM Weightless Neural Networks](https://github.com/xperroni/Yamabiko/tree/master/2013-2);
 * `vision`: operations on images.
@@ -28,9 +29,22 @@ Under Bash-compatible environments, the scripts `build.sh` and `clean.sh` can be
 Version History
 ---------------
 
-**2015-??-??**
+**2016-09-03**
 
-As 
+As promised last year, I ported the library to ROS, or more specifically its [catkin](http://wiki.ros.org/catkin) build system. Classes that dealt with multi-threading (`Context`, `Locker`, `Loop`, `Looper`) were therefore removed (I was tempted to take the cue to do a long-overdue cull of the whole library, but in the end decided to leave it for later). I also started converting existing code to [ROS standards](http://wiki.ros.org/CppStyleGuide), but this will likely take a long time to complete.
+
+A new sorting algorithm (an implementation of [bucket sort](https://en.wikipedia.org/wiki/Bucket_sort)) was added to the `core` module, as well as several new math-related facilities:
+
+* Default `cv::Scalar` values `ONE` and `ZERO` for easier setting of matrix ranges;
+* A `magnitude()` function to compute the [Euclidean norm](https://en.wikipedia.org/wiki/Norm_%28mathematics%29#Euclidean_norm) of matrixes;
+* An `sqrt()` function to compute the element-wise square root of matrixes;
+* A `truncate(x, a, n)` function that returns `a` if `x < a`, `n` if `x > n`, and `x` otherwise.
+
+Moreover, two new functions `str()` and `eval()` were added that respectively convert data types to and from `std::string`. These are meant to eventually replace the older `to_string()` and `from_string()`.
+
+In the `vision` module, a new class `clarus::Integral` was added to provide a convenient interface to integral image creation and common operations. Two `bgr()` overloads were also added to convert floating-point depth maps to BGR images: one that enables colormap selection (using the [`cv::applyColorMap()`](http://docs.opencv.org/2.4/modules/contrib/doc/facerec/colormaps.html#applycolormap) constants) and other that makes possible to scale the BGR image by passing just the width, with a proportional height being automatically computed.
+
+A new module `fftw` was added, providing an OpenCV-friendly interface to FFTW routines. This will eventually replace Fourier transform-related functions in the `vision` module.
 
 **2015-03-16**
 
