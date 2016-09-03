@@ -11,6 +11,21 @@ find_package(catkin REQUIRED)
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 find_package(OpenCV 2.4.10 REQUIRED)
 
+# Add FFTW support
+list(APPEND FFTW3_LIBS fftw3)
+add_library(fftw3 SHARED IMPORTED)
+set_target_properties(fftw3 PROPERTIES IMPORTED_LOCATION
+  "/usr/lib/x86_64-linux-gnu/libfftw3.so"
+)
+
+# Add threaded FFTW support
+find_package(Threads)
+list(APPEND FFTW3_LIBS fftw3_threads)
+add_library(fftw3_threads SHARED IMPORTED)
+set_target_properties(fftw3_threads PROPERTIES IMPORTED_LOCATION
+  "/usr/lib/x86_64-linux-gnu/libfftw3_threads.so"
+)
+
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -79,7 +94,7 @@ find_package(OpenCV 2.4.10 REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   # Mind the order of the libraries, must be listed in inverse order of dependencies
-  LIBRARIES clarus_io clarus_vgram clarus_vision clarus_model clarus_core
+  LIBRARIES clarus_io clarus_vgram clarus_vision clarus_model clarus_fftw clarus_core
   DEPENDS OpenCV boost
 #    CATKIN_DEPENDS other_catkin_pkg
 )
@@ -106,14 +121,21 @@ include_directories(
 
 add_library(clarus_core
   "src/clarus/core/bag.cpp"
-  "src/clarus/core/context.cpp"
 #  "src/clarus/core/list.cpp"
-  "src/clarus/core/locker.cpp"
-  "src/clarus/core/loop.cpp"
-  "src/clarus/core/looper.cpp"
   "src/clarus/core/math.cpp"
   "src/clarus/core/matrix.cpp"
   "src/clarus/core/types.cpp"
+)
+
+add_library(clarus_fftw
+  "src/clarus/fftw/buffer.cpp"
+  "src/clarus/fftw/correlate.cpp"
+  "src/clarus/fftw/cosine_search.cpp"
+  "src/clarus/fftw/plan.cpp"
+  "src/clarus/fftw/signal.cpp"
+  "src/clarus/fftw/signal_domain_c.cpp"
+  "src/clarus/fftw/signal_domain_r.cpp"
+  "src/clarus/fftw/signals.cpp"
 )
 
 add_library(clarus_io
@@ -151,6 +173,7 @@ add_library(clarus_vision
   "src/clarus/vision/fourier.cpp"
   "src/clarus/vision/gaussian.cpp"
   "src/clarus/vision/images.cpp"
+  "src/clarus/vision/integral.cpp"
   "src/clarus/vision/logpolar.cpp"
   "src/clarus/vision/minchinton.cpp"
   "src/clarus/vision/segment.cpp"
@@ -172,6 +195,10 @@ add_library(clarus_vision
 #   ${OpenCV_LIBRARIES}
 #   ${boost_LIBRARIES}
 # )
+
+target_link_libraries(clarus_fftw
+ ${FFTW3_LIBS}
+)
 
 #############
 ## Install ##
@@ -197,6 +224,7 @@ add_library(clarus_vision
 install(
   TARGETS
     clarus_core
+    clarus_fftw
     clarus_io
     clarus_model
     clarus_vgram
