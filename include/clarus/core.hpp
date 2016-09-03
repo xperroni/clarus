@@ -22,12 +22,8 @@ along with Clarus. If not, see <http://www.gnu.org/licenses/>.
 
 #include <clarus/core/bag.hpp>
 #include <clarus/core/bucket_sort.hpp>
-#include <clarus/core/context.hpp>
 #include <clarus/core/index.hpp>
 #include <clarus/core/list.hpp>
-#include <clarus/core/locker.hpp>
-#include <clarus/core/loop.hpp>
-#include <clarus/core/looper.hpp>
 #include <clarus/core/math.hpp>
 #include <clarus/core/matrix.hpp>
 #include <clarus/core/tuple.hpp>
