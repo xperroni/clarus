@@ -13,18 +13,14 @@ Clarus is a library for machine learning, geared towards computer vision problem
 Build & Install
 ---------------
 
-Clarus is built using [cmake](http://www.cmake.org/). To build the project as a set of static libraries open a terminal window and type the commands below:
+Clarus is built using [catkin](http://wiki.ros.org/catkin). Type the commands below on a terminal window to create a catkin workspace, clone the repository and build the sources:
 
-    $ cd $CLARUS_SOURCE/build/release
-    $ cmake -DCMAKE_BUILD_TYPE=Release ../..
-    $ make -j2
-    $ sudo make install
-
-If you'd rather have shared libraries, change the `cmake` command to:
-
-    $ cmake -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE=Release ../..
-
-Under Bash-compatible environments, the scripts `build.sh` and `clean.sh` can be used to quickly build the project and clean the compilation environment.
+    $ mkdir -p ~/catkin_ws/src
+    $ cd ~/catkin_ws/src
+    $ catkin_init_workspace
+    $ git clone https://github.com/xperroni/Clarus.git
+    $ cd ..
+    $ catkin_make
 
 Version History
 ---------------
