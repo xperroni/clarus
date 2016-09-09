@@ -18,7 +18,7 @@ Clarus is built using [catkin](http://wiki.ros.org/catkin). Type the commands be
     $ mkdir -p ~/catkin_ws/src
     $ cd ~/catkin_ws/src
     $ catkin_init_workspace
-    $ git clone https://github.com/xperroni/Clarus.git
+    $ git clone https://github.com/xperroni/clarus.git
     $ cd ..
     $ catkin_make
 
